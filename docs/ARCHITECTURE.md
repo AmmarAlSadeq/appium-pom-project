@@ -2,42 +2,67 @@
 
 ## Framework Overview
 
-Appium + Java + TestNG mobile automation framework implementing a three-layer Page Object Model for the ApiDemos Android app. The framework provides a structured approach to mobile UI testing with emphasis on maintainability, reusability, and clear separation of concerns.
+Appium + Java + TestNG mobile automation framework using a strict **three-layer Page Object Model** against the ApiDemos Android app. Locators, pages, and tests are fully separated — no `@AndroidFindBy`, no `PageFactory`, no inline selectors in pages.
 
-**Scope:** This framework covers test scenarios against ApiDemos-debug.apk (home screen navigation, category verification, and sub-menu validation). Additional test scenarios will be added incrementally.
+**Scope:** This framework covers test scenarios against ApiDemos-debug.apk (home screen navigation, category verification, drag and drop, controls, dialogs, and scroll interactions). Additional test scenarios will be added incrementally.
 
 **Target App:** [ApiDemos-debug.apk v6.0.6](https://github.com/appium/android-apidemos/releases/download/v6.0.6/ApiDemos-debug.apk) - Package: `io.appium.android.apis` | Activity: `io.appium.android.apis.ApiDemos`
 
 ---
 
-## Architecture Layers
+## Architecture — Three-Layer Page Object Model
 
-The framework follows a three-layer architecture:
-
-| Layer | Location | Purpose |
-|-------|----------|---------|
-| **Locators** | `src/main/java/org/automation/locators/` | Selector strings separated from page logic |
-| **Page Objects** | `src/main/java/org/automation/pages/` | Methods and interactions |
-| **Tests** | `src/test/java/org/automation/tests/` | Test classes calling page methods |
+The framework enforces strict separation across three layers:
 
 ```
 ┌─────────────────────────────────────────────────────┐
 │                    TEST LAYER                        │
-│         tests/ - Calls page methods only            │
+│         tests/ - Assertions and test flow only      │
 └─────────────────────────────────────────────────────┘
                           │
                           ▼
 ┌─────────────────────────────────────────────────────┐
 │                   PAGES LAYER                        │
-│       pages/ - Methods and interactions             │
+│  Private WebElement methods + public actions         │
+│  References locators from *Locators constants        │
 └─────────────────────────────────────────────────────┘
                           │
                           ▼
 ┌─────────────────────────────────────────────────────┐
 │                  LOCATORS LAYER                      │
-│       locators/ - Selector strings only             │
+│  public static final String constants only           │
+│  No logic, no WebDriver imports                     │
 └─────────────────────────────────────────────────────┘
 ```
+
+### Page Object Pattern
+
+Each page class follows this structure:
+
+```java
+public class XxxPage extends AndroidActions {
+
+    AndroidDriver driver;
+
+    public XxxPage(AndroidDriver driver) {
+        super(driver);
+        this.driver = driver;
+    }
+
+    private WebElement elementName() {
+        return driver.findElement(AppiumBy.accessibilityId(XxxLocators.ELEMENT_NAME));
+    }
+
+    public void doSomething() {
+        elementName().click();
+    }
+}
+```
+
+- Elements defined as **private methods** returning `WebElement` using `By`/`AppiumBy` with locator constants
+- **NO `@AndroidFindBy`**, **NO `PageFactory`**, **NO `AppiumFieldDecorator`**
+- Locator priority: Accessibility ID > Resource ID > UiAutomator text > XPath
+- Pages that need gestures extend `AndroidActions`
 
 ---
 
@@ -46,9 +71,9 @@ The framework follows a three-layer architecture:
 | Principle | Implementation |
 |-----------|----------------|
 | **Encapsulation** | Page objects encapsulate UI structure and behavior; tests interact through methods only |
-| **Separation of Concerns** | Locators define selectors, pages define interactions, tests define intent |
-| **Reusability** | WaitHelper, ScrollHelper, SwipeHelper shared across all pages |
-| **Maintainability** | Single source of truth for locators reduces change impact |
+| **Separation of Concerns** | Locators define selectors, pages define interactions, tests define assertions |
+| **Reusability** | ScrollHelper, SwipeHelper shared across pages; AndroidActions provides gesture methods |
+| **Maintainability** | Selector changes require editing only the locators class — single source of truth |
 | **Test Independence** | Each test runs in isolation with fresh driver via DriverFactory |
 
 ---
@@ -56,7 +81,7 @@ The framework follows a three-layer architecture:
 ## Project Structure
 
 ```
-appium-pom-automation/
+appium-pom-project/
 ├── .github/workflows/
 │   └── appium.yml                         # CI/CD pipeline
 ├── docs/
@@ -64,12 +89,26 @@ appium-pom-automation/
 ├── src/
 │   ├── main/java/org/automation/
 │   │   ├── locators/                      # LOCATORS LAYER - selector strings only
-│   │   │   ├── HomeLocators.java          # Home screen selectors
-│   │   │   └── ViewsLocators.java         # Views sub-menu selectors
+│   │   │   ├── HomeLocators.java          # Home screen accessibility IDs
+│   │   │   ├── ViewsLocators.java         # Views sub-menu accessibility IDs
+│   │   │   ├── LayoutsLocators.java       # Layouts sub-menu
+│   │   │   ├── ScrollViewLocators.java    # ScrollView selectors
+│   │   │   ├── DragDropLocators.java      # Drag and Drop resource IDs
+│   │   │   ├── ExpandableListLocators.java # Expandable list text selectors
+│   │   │   ├── ControlsLocators.java      # Controls accessibility IDs + resource IDs
+│   │   │   ├── AlertDialogsLocators.java  # Alert dialog accessibility IDs + resource IDs
+│   │   │   └── AppLocators.java           # App sub-menu accessibility IDs
 │   │   │
 │   │   ├── pages/                         # PAGES LAYER - methods and interactions
 │   │   │   ├── HomePage.java              # Home screen: categories, navigation
-│   │   │   └── ViewsPage.java             # Views sub-menu: animation verification
+│   │   │   ├── ViewsPage.java             # Views sub-menu: navigation to sub-screens
+│   │   │   ├── LayoutsPage.java           # Layouts sub-menu: ScrollView navigation
+│   │   │   ├── ScrollViewPage.java        # TC-002: scroll to bottom and back
+│   │   │   ├── DragDropPage.java          # TC-003: drag dot and verify result
+│   │   │   ├── ExpandableListPage.java    # TC-004: expand/collapse groups
+│   │   │   ├── ControlsPage.java          # TC-005: button, checkbox, radio, toggle
+│   │   │   ├── AlertDialogsPage.java      # TC-006: OK Cancel, List, Single choice dialogs
+│   │   │   └── AppPage.java               # App sub-menu: Alert Dialogs navigation
 │   │   │
 │   │   ├── config/                        # Driver configuration
 │   │   │   └── DriverFactory.java         # Singleton driver factory with capabilities
@@ -78,18 +117,27 @@ appium-pom-automation/
 │   │   │   ├── AppiumUtils.java           # Server start/stop, ExtentReports, JSON reader
 │   │   │   ├── AndroidActions.java        # Gesture methods (long press, swipe, drag)
 │   │   │   ├── WaitHelper.java            # Explicit waits (WebDriverWait wrapper)
-│   │   │   ├── ScrollHelper.java          # UiScrollable + W3C scroll actions
+│   │   │   ├── ScrollHelper.java          # UiScrollable + mobile:scroll actions
 │   │   │   └── SwipeHelper.java           # W3C swipe actions (left/right/up/down)
 │   │   │
 │   │   └── resources/
-│   │       └── config.properties          # Appium & device configuration
+│   │       ├── config.properties          # Appium & device configuration
+│   │       └── ApiDemos-debug.apk         # Target APK
 │   │
 │   └── test/java/org/automation/
 │       ├── tests/                         # TEST LAYER - test logic and assertions
-│       │   └── HomeTest.java              # Home screen: categories, navigate to Views
+│       │   ├── HomeTest.java              # TC-001: home screen categories
+│       │   ├── ScrollViewTest.java        # TC-002: scroll to bottom and back
+│       │   ├── DragDropTest.java          # TC-003: drag and drop
+│       │   ├── ExpandableListTest.java    # TC-004: expandable lists
+│       │   ├── ControlsTest.java          # TC-005: controls light theme
+│       │   └── AlertDialogsTest.java      # TC-006: alert dialogs
+│       │
+│       ├── testData/                      # External test data files
+│       │   └── messages.json              # Expected messages for assertions
 │       │
 │       └── testUtils/                     # Test infrastructure
-│           ├── AndroidBaseClass.java      # Test lifecycle hooks (@BeforeClass/@AfterClass)
+│           ├── AndroidBaseClass.java      # Test lifecycle hooks + IHookable retry
 │           ├── Listeners.java             # ExtentReports + screenshot on failure
 │           └── RetryAnalyzer.java         # Auto-retry failed tests (max 2)
 │
@@ -152,7 +200,7 @@ The `ipAddress` can be overridden at runtime: `mvn test -DipAddress=192.168.1.10
 
 | Hook | Annotation | Purpose |
 |------|-----------|---------|
-| Setup | `@BeforeClass` | Start server, create driver, init helpers |
+| Setup | `@BeforeClass` | Start server, create driver |
 | Teardown | `@AfterClass` | Quit driver, stop server |
 
 All test classes extend `AndroidBaseClass` and inherit:
@@ -161,13 +209,35 @@ All test classes extend `AndroidBaseClass` and inherit:
 - `scrollHelper` - ScrollHelper for scroll operations
 - `swipeHelper` - SwipeHelper for swipe gestures
 
+`AndroidBaseClass` implements `IHookable` to automatically attach `RetryAnalyzer` to all tests.
+
+---
+
+## Data Layer
+
+Test data is externalized in JSON files under `src/test/java/org/automation/testData/`.
+
+### messages.json
+
+Central store for all expected message strings used in assertions:
+
+```json
+{
+  "alertDialogs": {
+    "listDialogSelection": "You selected: 0 , Command one"
+  }
+}
+```
+
+Tests read from this file using Jackson `ObjectMapper`, keeping expected text out of test code.
+
 ---
 
 ## Utility Classes
 
 ### WaitHelper
 
-WebDriverWait wrapper eliminating all `Thread.sleep` calls. All waits are configurable via the constructor (default 15 seconds).
+WebDriverWait wrapper eliminating all `Thread.sleep` calls.
 
 | Method | Returns | Description |
 |--------|---------|-------------|
@@ -175,34 +245,31 @@ WebDriverWait wrapper eliminating all `Thread.sleep` calls. All waits are config
 | `waitForClickable(element)` | WebElement | Waits for element to be clickable |
 | `waitForTextPresent(element, text)` | boolean | Waits for text in element |
 | `waitUntilInvisible(element)` | boolean | Waits for element to disappear |
-| `waitForVisibilityByLocator(by)` | WebElement | Waits for element by locator |
 
 ### ScrollHelper
 
-Dual-strategy scrolling using UiScrollable for text-based discovery and W3C Actions for gesture-based navigation.
+UiScrollable for text-based discovery and mobile:scroll for gesture-based navigation.
 
 | Method | Returns | Description |
 |--------|---------|-------------|
 | `scrollToText(text)` | boolean | UiScrollable scroll to visible text |
 | `scrollDown()` / `scrollUp()` | boolean | mobile:scroll via JavascriptExecutor |
-| `scrollDownWithActions()` / `scrollUpWithActions()` | boolean | W3C PointerInput swipe |
 | `scrollToBottom()` / `scrollToTop()` | boolean | UiScrollable scrollToEnd/beginning |
 | `scrollToTextWithRetry(text, max)` | boolean | Dynamic loop: scroll until found |
 
 ### SwipeHelper
 
-W3C PointerInput-based swiping with configurable duration and offset. No deprecated TouchAction APIs.
+W3C PointerInput-based swiping with configurable duration and offset.
 
 | Method | Parameters | Description |
 |--------|------------|-------------|
 | `swipeLeft()` / `swipeRight()` | durationMs, offset | Horizontal swipe with percentage |
 | `swipeUp()` / `swipeDown()` | durationMs, offset | Vertical swipe with percentage |
 | `horizontalSwipe(startX, startY, endX)` | coordinates | Precise horizontal swipe |
-| `verticalSwipe(startX, startY, endY)` | coordinates | Precise vertical swipe |
 
 ### AndroidActions (Gesture Methods)
 
-Inherited by all page objects for native gesture support:
+Inherited by page objects that need gesture support:
 
 | Method | Gesture | Description |
 |--------|---------|-------------|
@@ -228,7 +295,7 @@ Report output: `src/reports/extent-report.html`
 
 ### Retry Mechanism
 
-`RetryAnalyzer` automatically retries failed tests up to **2 times** before marking as failed. Integrated via TestNG listener.
+`RetryAnalyzer` automatically retries failed tests up to **2 times** via `AndroidBaseClass` implementing `IHookable`.
 
 ---
 
@@ -237,9 +304,13 @@ Report output: `src/reports/extent-report.html`
 | TC ID | Test Name | Navigation Path | Key Assertions |
 |-------|-----------|-----------------|----------------|
 | TC-001 | Home Screen Verification | Home | 11 categories present, Views tappable |
-| TC-001 | Navigate to Views | Home -> Views | Animation item visible in Views sub-menu |
+| TC-002 | ScrollView Bottom/Top | Home -> Views -> Layouts -> ScrollView -> 2. Long | Scroll bottom, scroll top, first element visibility |
+| TC-003 | Drag and Drop | Home -> Views -> Drag and Drop | Drag dot1 to dot2, assert "Dropped!" text |
+| TC-004 | Expandable Lists | Home -> Views -> Expandable Lists -> Custom Adapter | Expand/collapse groups, child count changes |
+| TC-005 | Controls Light Theme | Home -> Views -> Controls -> 1. Light Theme | Button, checkbox, radio, toggle (`getAttribute("checked")`) |
+| TC-006 | Alert Dialogs | Home -> App -> Alert Dialogs | OK Cancel, List (message verified from messages.json), Single choice dialogs |
 
-Additional scenarios (TC-002 through TC-010) will be added incrementally as new page objects and locators are created.
+Additional scenarios (TC-007 through TC-010) will be added incrementally.
 
 ---
 
@@ -254,8 +325,8 @@ Additional scenarios (TC-002 through TC-010) will be added incrementally as new 
    ├── DriverFactory.getDriver()     - AndroidDriver created
    └── WaitHelper / ScrollHelper / SwipeHelper initialized
 5. @Test methods execute
-   ├── Page objects call locator-defined elements
-   ├── Interactions via WaitHelper / ScrollHelper / SwipeHelper
+   ├── Page objects instantiate with AndroidDriver
+   ├── Private WebElement methods reference locator constants
    └── Assertions in test layer only
 6. Listener captures pass/fail -> ExtentReports
    └── On failure: screenshot captured (Base64) and attached
@@ -289,39 +360,25 @@ Additional scenarios (TC-002 through TC-010) will be added incrementally as new 
 - One concept per test - focus on single behavior verification
 - Test classes named by feature: `HomeTest`, `ControlsTest`
 - Independent tests - no dependencies between test cases
-- Data-driven tests use `@DataProvider` with external JSON files
-- Minimal test data - include only what the scenario requires
+- Data-driven: expected messages stored in `testData/messages.json`
 
-### Framework Conventions
-- All selectors in `locators/` - never inline in page objects or tests
-- Page methods for all interactions - tests express intent, not implementation
-- No `Thread.sleep` - always use `WaitHelper` methods
-- No `@AndroidFindBy` - use `By` locators from locators layer
+### Page Object Conventions
+- Elements defined as **private methods** returning `WebElement` using `By`/`AppiumBy` with locator constants
+- **NO `@AndroidFindBy`**, **NO `PageFactory`**, **NO `AppiumFieldDecorator`**
+- Pages needing gestures extend `AndroidActions`
 - No assertions in page objects - all assertions live in test classes
-- Tests never import from `locators/` layer
+- Tests never reference locators directly - only call page methods
+- Android checkbox/radio/toggle states use `getAttribute("checked")` not `isSelected()`
 
 ### Selector Strategy
-Preferred locator priority:
 
-1. **Accessibility ID** - most stable for ApiDemos
-2. **Resource ID** - `By.id("android:id/list")`
-3. **UiAutomator text selectors** - `new UiSelector().text("Views")`
-4. **XPath** - fallback for dynamic elements
-
-**Avoid**:
-- Hardcoded coordinates (except for swipe/scroll gestures)
-- Fragile DOM paths
-- `@AndroidFindBy` annotations (breaks three-layer architecture)
+1. **Accessibility ID** - `AppiumBy.accessibilityId("Views")`
+2. **Resource ID** - `By.id("io.appium.android.apis:id/button")`
+3. **UiAutomator** - `AppiumBy.androidUIAutomator("new UiSelector().text(...)")` for dynamic lookups
 
 ### Adding a New Test
-1. Create locators class in `src/main/java/org/automation/locators/`
-2. Create page class in `src/main/java/org/automation/pages/`
+1. Create locators class in `src/main/java/org/automation/locators/` with `public static final String` constants
+2. Create page class in `src/main/java/org/automation/pages/` with private WebElement methods referencing locators
 3. Create test class in `src/test/java/org/automation/tests/`
 4. Add test class to `testng.xml`
 5. Update this ARCHITECTURE.md and README.md
-
-### Documentation
-- Javadoc for public methods in page objects and utilities
-- `@param` for each parameter
-- `@return` for methods returning values
-- `@throws` when method can throw checked exceptions

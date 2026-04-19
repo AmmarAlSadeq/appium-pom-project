@@ -1,9 +1,0 @@
-[
-  {
-    "checkboxToToggle": "//android.widget.CheckBox[@text='Checkbox 1']",
-    "expectedCheckboxState": "true",
-    "radioToSelect": "//android.widget.RadioButton[@text='Radio 1']",
-    "expectedRadioState": "true",
-    "seekbarProgress": "50"
-  }
-]

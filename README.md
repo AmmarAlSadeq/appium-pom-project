@@ -7,7 +7,7 @@
 
 ## Project Description
 
-Mobile UI automation framework for the **ApiDemos** Android application using Appium, Java, and TestNG. The framework implements a three-layer Page Object Model (Locators - Pages - Tests) for maintainable and scalable test automation. Built with ExtentReports for reporting and GitHub Actions for CI/CD.
+Mobile UI automation framework for the **ApiDemos** Android application using Appium, Java, and TestNG. The framework implements Page Object Model with `@AndroidFindBy` annotations and `PageFactory` for maintainable and scalable test automation. Built with ExtentReports for reporting and GitHub Actions for CI/CD.
 
 **Target App:** [ApiDemos-debug.apk v6.0.6](https://github.com/appium/android-apidemos/releases/download/v6.0.6/ApiDemos-debug.apk)
 

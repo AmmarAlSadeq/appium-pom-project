@@ -8,32 +8,20 @@ import org.automation.utils.AppiumUtils;
 import org.automation.utils.ScrollHelper;
 import org.automation.utils.SwipeHelper;
 import org.automation.utils.WaitHelper;
-import org.testng.IHookCallBack;
-import org.testng.IHookable;
-import org.testng.ITestResult;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 
 /**
  * Base class for Android test automation.
  * Uses DriverFactory for driver lifecycle, keeps AppiumUtils server management.
- * Automatically assigns RetryAnalyzer to all test methods.
  */
-public class AndroidBaseClass extends AppiumUtils implements IHookable {
+public class AndroidBaseClass extends AppiumUtils {
 
     public AndroidDriver driver;
     public WaitHelper waitHelper;
     public ScrollHelper scrollHelper;
     public SwipeHelper swipeHelper;
-
-    /**
-     * Intercepts test execution to set RetryAnalyzer before each test runs.
-     */
-    @Override
-    public void run(IHookCallBack callBack, ITestResult testResult) {
-        testResult.getMethod().setRetryAnalyzerClass(RetryAnalyzer.class);
-        callBack.runTestMethod(testResult);
-    }
 
     /**
      * Starts Appium server and initializes AndroidDriver via DriverFactory.
@@ -49,6 +37,15 @@ public class AndroidBaseClass extends AppiumUtils implements IHookable {
         waitHelper = new WaitHelper(driver);
         scrollHelper = new ScrollHelper(driver);
         swipeHelper = new SwipeHelper(driver);
+    }
+
+    /**
+     * Resets the app to the home screen before each test method (including retries).
+     */
+    @BeforeMethod(alwaysRun = true)
+    public void resetAppToHome() {
+        driver.terminateApp("io.appium.android.apis");
+        driver.activateApp("io.appium.android.apis");
     }
 
     /**

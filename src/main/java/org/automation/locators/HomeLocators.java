@@ -3,14 +3,11 @@ package org.automation.locators;
 /**
  * Locator constants for the ApiDemos Home screen.
  * Contains ONLY selector strings — no logic, no methods.
- * All locators verified via Appium Inspector against ApiDemos-debug.apk v6.0.6.
  */
 public class HomeLocators {
 
-    // Main list container
     public static final String CATEGORY_LIST = "android:id/list";
 
-    // Category accessibility IDs (verified from Appium Inspector)
     public static final String ACCESSIBILITY = "Accessibility";
     public static final String ANIMATION = "Animation";
     public static final String APP = "App";
