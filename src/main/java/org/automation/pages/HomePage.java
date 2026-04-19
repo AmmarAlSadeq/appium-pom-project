@@ -3,25 +3,25 @@ package org.automation.pages;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 import org.automation.locators.HomeLocators;
-import org.automation.utils.AndroidActions;
-import org.automation.utils.WaitHelper;
 import org.openqa.selenium.WebElement;
 
 /**
  * Page object for the ApiDemos Home screen.
  */
-public class HomePage extends AndroidActions {
+public class HomePage {
 
-    private final WaitHelper waitHelper;
+    AndroidDriver driver;
 
-    /**
-     * Constructs a HomePage with the given driver.
-     *
-     * @param driver The AndroidDriver instance.
-     */
     public HomePage(AndroidDriver driver) {
-        super(driver);
-        this.waitHelper = new WaitHelper(driver);
+        this.driver = driver;
+    }
+
+    private WebElement viewsCategory() {
+        return driver.findElement(AppiumBy.accessibilityId(HomeLocators.VIEWS));
+    }
+
+    private WebElement appCategory() {
+        return driver.findElement(AppiumBy.accessibilityId(HomeLocators.APP));
     }
 
     /**
@@ -32,8 +32,7 @@ public class HomePage extends AndroidActions {
      */
     public boolean isCategoryDisplayed(String accessibilityId) {
         try {
-            WebElement element = driver.findElement(AppiumBy.accessibilityId(accessibilityId));
-            return waitHelper.waitForVisibility(element).isDisplayed();
+            return driver.findElement(AppiumBy.accessibilityId(accessibilityId)).isDisplayed();
         } catch (Exception e) {
             return false;
         }
@@ -62,7 +61,13 @@ public class HomePage extends AndroidActions {
      * Opens the Views page by tapping the Views category.
      */
     public void openViewsPage() {
-        WebElement views = driver.findElement(AppiumBy.accessibilityId(HomeLocators.VIEWS));
-        waitHelper.waitForClickable(views).click();
+        viewsCategory().click();
+    }
+
+    /**
+     * Opens the App page by tapping the App category.
+     */
+    public void openAppPage() {
+        appCategory().click();
     }
 }

@@ -2,12 +2,42 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="ApiDemos Test Suite">
     <listeners>
-        <listener class-name="org.based onautomation.testUtils.Listeners"/>
+        <listener class-name="org.automation.testUtils.Listeners"/>
     </listeners>
 
     <test name="Home Screen Tests">
         <classes>
             <class name="org.automation.tests.HomeTest"/>
+        </classes>
+    </test>
+
+    <test name="ScrollView Tests">
+        <classes>
+            <class name="org.automation.tests.ScrollViewTest"/>
+        </classes>
+    </test>
+
+    <test name="Drag and Drop Tests">
+        <classes>
+            <class name="org.automation.tests.DragDropTest"/>
+        </classes>
+    </test>
+
+    <test name="Expandable List Tests">
+        <classes>
+            <class name="org.automation.tests.ExpandableListTest"/>
+        </classes>
+    </test>
+
+    <test name="Controls Tests">
+        <classes>
+            <class name="org.automation.tests.ControlsTest"/>
+        </classes>
+    </test>
+
+    <test name="Alert Dialogs Tests">
+        <classes>
+            <class name="org.automation.tests.AlertDialogsTest"/>
         </classes>
     </test>
 </suite>

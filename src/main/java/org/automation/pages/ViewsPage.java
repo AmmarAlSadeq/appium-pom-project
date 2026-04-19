@@ -4,7 +4,7 @@ import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 import org.automation.locators.ViewsLocators;
 import org.automation.utils.AndroidActions;
-import org.automation.utils.WaitHelper;
+import org.automation.utils.ScrollHelper;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -12,16 +12,35 @@ import org.openqa.selenium.WebElement;
  */
 public class ViewsPage extends AndroidActions {
 
-    private final WaitHelper waitHelper;
+    private final ScrollHelper scrollHelper;
 
-    /**
-     * Constructs a ViewsPage with the given driver.
-     *
-     * @param driver The AndroidDriver instance.
-     */
     public ViewsPage(AndroidDriver driver) {
         super(driver);
-        this.waitHelper = new WaitHelper(driver);
+        this.scrollHelper = new ScrollHelper(driver);
+    }
+
+    private WebElement expandableListsItem() {
+        return driver.findElement(AppiumBy.accessibilityId(ViewsLocators.EXPANDABLE_LISTS));
+    }
+
+    private WebElement layoutsItem() {
+        return driver.findElement(AppiumBy.accessibilityId(ViewsLocators.LAYOUTS));
+    }
+
+    private WebElement dragAndDropItem() {
+        return driver.findElement(AppiumBy.accessibilityId(ViewsLocators.DRAG_AND_DROP));
+    }
+
+    private WebElement controlsItem() {
+        return driver.findElement(AppiumBy.accessibilityId(ViewsLocators.CONTROLS));
+    }
+
+    private WebElement listsItem() {
+        return driver.findElement(AppiumBy.accessibilityId(ViewsLocators.LISTS));
+    }
+
+    private WebElement progressBarItem() {
+        return driver.findElement(AppiumBy.accessibilityId(ViewsLocators.PROGRESS_BAR));
     }
 
     /**
@@ -31,10 +50,56 @@ public class ViewsPage extends AndroidActions {
      */
     public boolean isExpandableListsDisplayed() {
         try {
-            WebElement element = driver.findElement(AppiumBy.accessibilityId(ViewsLocators.EXPANDABLE_LISTS));
-            return waitHelper.waitForVisibility(element).isDisplayed();
+            return expandableListsItem().isDisplayed();
         } catch (Exception e) {
             return false;
         }
+    }
+
+    /**
+     * Opens the Layouts sub-menu by scrolling to and tapping Layouts.
+     */
+    public void openLayouts() {
+        scrollHelper.scrollToText(ViewsLocators.LAYOUTS);
+        layoutsItem().click();
+    }
+
+    /**
+     * Opens the Drag and Drop screen by scrolling to and tapping Drag and Drop.
+     */
+    public void openDragAndDrop() {
+        scrollHelper.scrollToText(ViewsLocators.DRAG_AND_DROP);
+        dragAndDropItem().click();
+    }
+
+    /**
+     * Opens the Expandable Lists sub-menu by tapping Expandable Lists.
+     */
+    public void openExpandableLists() {
+        expandableListsItem().click();
+    }
+
+    /**
+     * Opens the Controls sub-menu by scrolling to and tapping Controls.
+     */
+    public void openControls() {
+        scrollHelper.scrollToText(ViewsLocators.CONTROLS);
+        controlsItem().click();
+    }
+
+    /**
+     * Opens the Lists sub-menu by scrolling to and tapping Lists.
+     */
+    public void openLists() {
+        scrollHelper.scrollToText(ViewsLocators.LISTS);
+        listsItem().click();
+    }
+
+    /**
+     * Opens the Progress Bar sub-menu by scrolling to and tapping Progress Bar.
+     */
+    public void openProgressBar() {
+        scrollHelper.scrollToText(ViewsLocators.PROGRESS_BAR);
+        progressBarItem().click();
     }
 }
