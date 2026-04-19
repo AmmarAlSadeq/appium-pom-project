@@ -1,0 +1,17 @@
+[
+  {
+    "dialogType": "OK Cancel",
+    "action": "accept",
+    "expectedResult": "dialogDismissed"
+  },
+  {
+    "dialogType": "List",
+    "itemToSelect": "Command one",
+    "expectedResult": "selected"
+  },
+  {
+    "dialogType": "Single choice",
+    "choiceToSelect": "Every week",
+    "expectedResult": "selected"
+  }
+]

@@ -1,0 +1,8 @@
+[
+  {
+    "firstTextInput": "Appium POM Test",
+    "expectedFirstLogEntry": "Appium POM Test",
+    "secondTextInput": "Automation Engineer",
+    "expectedSecondLogEntry": "Automation Engineer"
+  }
+]

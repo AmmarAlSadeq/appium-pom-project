@@ -1,0 +1,32 @@
+# Build output
+/target/
+
+# Reports (generated at runtime)
+/reports/
+
+# APK files
+*.apk
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Python cache
+__pycache__/
+
+# Environment
+.env
+.env.local
+
+# Maven
+*.class
+*.jar
+*.war
+
+# Logs
+*.log
