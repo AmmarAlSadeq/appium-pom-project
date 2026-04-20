@@ -5,13 +5,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebElement;
 import com.google.common.collect.ImmutableMap;
 import io.appium.java_client.android.AndroidDriver;
+import org.automation.base.BasePage;
 
 /**
- * Utility class for performing Android-specific actions using Appium.
- * Provides gesture methods: long press, swipe, drag-and-drop.
+ * Utility class for performing Android-specific gesture actions.
+ * Extends BasePage to inherit driver and waitHelper.
  */
-public class AndroidActions extends AppiumUtils {
-    protected AndroidDriver driver;
+public class AndroidActions extends BasePage {
 
     /**
      * Constructs AndroidActions with the given driver.
@@ -19,7 +19,7 @@ public class AndroidActions extends AppiumUtils {
      * @param driver The AndroidDriver instance.
      */
     public AndroidActions(AndroidDriver driver) {
-        this.driver = driver;
+        super(driver);
     }
 
     /**

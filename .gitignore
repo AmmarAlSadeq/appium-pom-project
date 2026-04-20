@@ -2,7 +2,7 @@
 /target/
 
 # Reports (generated at runtime)
-/reports/
+src/reports/
 
 # APK files
 *.apk

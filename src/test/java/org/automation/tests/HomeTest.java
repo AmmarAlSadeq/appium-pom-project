@@ -18,10 +18,8 @@ public class HomeTest extends AndroidBaseClass {
         HomePage homePage = new HomePage(driver);
         ViewsPage viewsPage = new ViewsPage(driver);
 
-        Assert.assertTrue(homePage.areAllCategoriesDisplayed(),
-                "All 11 categories should be displayed on home screen");
+        Assert.assertTrue(homePage.areAllCategoriesDisplayed());
         homePage.openViewsPage();
-        Assert.assertTrue(viewsPage.isExpandableListsDisplayed(),
-                "Expandable list in View sub-menu should be visible after tapping Views");
+        Assert.assertTrue(viewsPage.isExpandableListsDisplayed());
     }
 }

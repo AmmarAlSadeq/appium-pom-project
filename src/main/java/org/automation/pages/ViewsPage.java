@@ -49,11 +49,7 @@ public class ViewsPage extends AndroidActions {
      * @return true if the Expandable Lists element is displayed, false otherwise.
      */
     public boolean isExpandableListsDisplayed() {
-        try {
-            return expandableListsItem().isDisplayed();
-        } catch (Exception e) {
-            return false;
-        }
+        return isElementDisplayed(expandableListsItem());
     }
 
     /**
@@ -88,10 +84,10 @@ public class ViewsPage extends AndroidActions {
     }
 
     /**
-     * Opens the Lists sub-menu by scrolling to and tapping Lists.
+     * Opens the Lists sub-menu by scrolling down until Lists is visible, then tapping it.
      */
-    public void openLists() {
-        scrollHelper.scrollToText(ViewsLocators.LISTS);
+    public void openListsPage() {
+        scrollHelper.scrollToText(ViewsLocators.LAYOUTS);
         listsItem().click();
     }
 

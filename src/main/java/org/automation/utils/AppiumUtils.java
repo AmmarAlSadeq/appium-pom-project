@@ -65,10 +65,14 @@ public abstract class AppiumUtils {
      * @return The configured ExtentReports instance.
      */
     public static ExtentReports getReporterObject() {
-        // Set up report configurations
-        ExtentSparkReporter reporter = new ExtentSparkReporter(System.getProperty("user.dir") + "//src//reports//extent-report.html");
-        reporter.config().setReportName("Sauce Lab Automation Report");
-        reporter.config().setDocumentTitle("Sauce Lab Automation Report");
+        String reportPath = System.getProperty("user.dir") + "//src//reports//extent-report.html";
+        File oldReport = new File(reportPath);
+        if (oldReport.exists()) {
+            oldReport.delete();
+        }
+        ExtentSparkReporter reporter = new ExtentSparkReporter(reportPath);
+        reporter.config().setReportName("ApiDemos Automation Report");
+        reporter.config().setDocumentTitle("ApiDemos Automation Report");
 
         extentReport = new ExtentReports();
         extentReport.attachReporter(reporter);

@@ -53,13 +53,6 @@ public class ControlsPage extends AndroidActions {
     }
 
     /**
-     * Taps the Button control.
-     */
-    public void tapButton() {
-        button().click();
-    }
-
-    /**
      * Toggles the checkbox.
      */
     public void toggleCheckbox() {
@@ -72,7 +65,7 @@ public class ControlsPage extends AndroidActions {
      * @return true if checkbox is checked.
      */
     public boolean isCheckboxChecked() {
-        return Boolean.parseBoolean(checkbox().getAttribute("checked"));
+        return isChecked(checkbox());
     }
 
     /**
@@ -88,7 +81,7 @@ public class ControlsPage extends AndroidActions {
      * @return true if radio button 1 is selected.
      */
     public boolean isRadio1Selected() {
-        return Boolean.parseBoolean(radio1().getAttribute("checked"));
+        return isChecked(radio1());
     }
 
     /**
@@ -104,6 +97,6 @@ public class ControlsPage extends AndroidActions {
      * @return true if toggle is ON.
      */
     public boolean isToggleButtonOn() {
-        return Boolean.parseBoolean(toggleButton().getAttribute("checked"));
+        return isChecked(toggleButton());
     }
 }

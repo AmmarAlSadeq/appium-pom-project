@@ -40,4 +40,28 @@
             <class name="org.automation.tests.AlertDialogsTest"/>
         </classes>
     </test>
+
+    <test name="LogTextBox Tests">
+        <classes>
+            <class name="org.automation.tests.LogTextBoxTest"/>
+        </classes>
+    </test>
+
+    <test name="Lists Tests">
+        <classes>
+            <class name="org.automation.tests.ListsTest"/>
+        </classes>
+    </test>
+
+    <test name="Progress Bar Tests">
+        <classes>
+            <class name="org.automation.tests.ProgressBarTest"/>
+        </classes>
+    </test>
+
+    <test name="Horizontal Scroll Tests">
+        <classes>
+            <class name="org.automation.tests.HorizontalScrollTest"/>
+        </classes>
+    </test>
 </suite>

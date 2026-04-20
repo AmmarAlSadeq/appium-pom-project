@@ -2,18 +2,17 @@ package org.automation.pages;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
+import org.automation.base.BasePage;
 import org.automation.locators.ExpandableListLocators;
 import org.openqa.selenium.WebElement;
 
 /**
  * Page object for the Expandable Lists > Custom Adapter screen.
  */
-public class ExpandableListPage {
-
-    AndroidDriver driver;
+public class ExpandableListPage extends BasePage {
 
     public ExpandableListPage(AndroidDriver driver) {
-        this.driver = driver;
+        super(driver);
     }
 
     private WebElement customAdapterItem() {

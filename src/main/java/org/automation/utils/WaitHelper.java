@@ -3,6 +3,7 @@ package org.automation.utils;
 import java.time.Duration;
 
 import io.appium.java_client.android.AndroidDriver;
+import org.automation.config.DriverFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
@@ -17,27 +18,25 @@ public class WaitHelper {
 
     private final AndroidDriver driver;
     private final WebDriverWait wait;
-    private static final int DEFAULT_TIMEOUT = 15;
+    private final int timeoutSeconds;
 
     /**
-     * Constructs a WaitHelper with default timeout.
+     * Constructs a WaitHelper with timeout from config.properties.
      *
      * @param driver The AndroidDriver instance.
      */
     public WaitHelper(AndroidDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(DEFAULT_TIMEOUT));
+        this.timeoutSeconds = loadTimeout();
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
     }
 
-    /**
-     * Constructs a WaitHelper with custom timeout.
-     *
-     * @param driver          The AndroidDriver instance.
-     * @param timeoutSeconds  Custom wait timeout in seconds.
-     */
-    public WaitHelper(AndroidDriver driver, int timeoutSeconds) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
+    private static int loadTimeout() {
+        try {
+            return Integer.parseInt(DriverFactory.getInstance().getProperties().getProperty("defaultWaitTimeout"));
+        } catch (Exception e) {
+            return 15;
+        }
     }
 
     /**
@@ -51,7 +50,7 @@ public class WaitHelper {
         try {
             return wait.until(ExpectedConditions.visibilityOf(element));
         } catch (TimeoutException e) {
-            throw new TimeoutException("Element not visible after " + DEFAULT_TIMEOUT + " seconds: " + e.getMessage(), e);
+            throw new TimeoutException("Element not visible after " + timeoutSeconds + " seconds: " + e.getMessage(), e);
         }
     }
 
@@ -66,7 +65,7 @@ public class WaitHelper {
         try {
             return wait.until(ExpectedConditions.elementToBeClickable(element));
         } catch (TimeoutException e) {
-            throw new TimeoutException("Element not clickable after " + DEFAULT_TIMEOUT + " seconds: " + e.getMessage(), e);
+            throw new TimeoutException("Element not clickable after " + timeoutSeconds + " seconds: " + e.getMessage(), e);
         }
     }
 
@@ -110,7 +109,7 @@ public class WaitHelper {
         try {
             return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
         } catch (TimeoutException e) {
-            throw new TimeoutException("Element not visible by locator after " + DEFAULT_TIMEOUT + " seconds: " + locator.toString(), e);
+            throw new TimeoutException("Element not visible by locator after " + timeoutSeconds + " seconds: " + locator.toString(), e);
         }
     }
 }
