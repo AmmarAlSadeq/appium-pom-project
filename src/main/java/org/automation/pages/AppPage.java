@@ -2,18 +2,17 @@ package org.automation.pages;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
+import org.automation.base.BasePage;
 import org.automation.locators.AppLocators;
 import org.openqa.selenium.WebElement;
 
 /**
  * Page object for the App sub-menu screen.
  */
-public class AppPage {
-
-    AndroidDriver driver;
+public class AppPage extends BasePage {
 
     public AppPage(AndroidDriver driver) {
-        this.driver = driver;
+        super(driver);
     }
 
     private WebElement alertDialogsItem() {

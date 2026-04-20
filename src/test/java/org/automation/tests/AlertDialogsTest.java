@@ -37,30 +37,23 @@ public class AlertDialogsTest extends AndroidBaseClass {
 
         // OK Cancel dialog
         alertDialogsPage.tapOkCancelDialog();
-        Assert.assertTrue(alertDialogsPage.isDialogDisplayed(),
-                "OK Cancel dialog should be displayed");
+        Assert.assertTrue(alertDialogsPage.isDialogDisplayed());
         alertDialogsPage.tapDialogOk();
-        Assert.assertTrue(alertDialogsPage.isDialogDismissed(),
-                "OK Cancel dialog should be dismissed after tapping OK");
+        Assert.assertTrue(alertDialogsPage.isDialogDismissed());
 
         // List dialog
         alertDialogsPage.tapListDialog();
-        Assert.assertTrue(alertDialogsPage.isDialogDisplayed(),
-                "List dialog should be displayed");
+        Assert.assertTrue(alertDialogsPage.isDialogDisplayed());
         alertDialogsPage.selectCommandOne();
-        Assert.assertEquals(alertDialogsPage.getDialogMessage(), expectedListMessage,
-                "List dialog message should match expected text");
+        Assert.assertEquals(alertDialogsPage.getDialogMessage(), expectedListMessage);
         alertDialogsPage.dismissDialog();
-        Assert.assertTrue(alertDialogsPage.isDialogDismissed(),
-                "List dialog should be dismissed after pressing back");
+        Assert.assertTrue(alertDialogsPage.isDialogDismissed());
 
         // Single choice dialog
         alertDialogsPage.tapSingleChoiceDialog();
-        Assert.assertTrue(alertDialogsPage.isDialogDisplayed(),
-                "Single choice dialog should be displayed");
+        Assert.assertTrue(alertDialogsPage.isDialogDisplayed());
         alertDialogsPage.selectSatelliteOption();
         alertDialogsPage.tapDialogOk();
-        Assert.assertTrue(alertDialogsPage.isDialogDismissed(),
-                "Single choice dialog should be dismissed after selecting and tapping OK");
+        Assert.assertTrue(alertDialogsPage.isDialogDismissed());
     }
 }

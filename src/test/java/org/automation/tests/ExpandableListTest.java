@@ -26,13 +26,11 @@ public class ExpandableListTest extends AndroidBaseClass {
         expandableListPage.openCustomAdapter();
 
         expandableListPage.tapPeopleNamesGroup();
-        Assert.assertTrue(expandableListPage.arePeopleNamesChildrenDisplayed(),
-                "All children (Arnold, Barry, Chuck, David) should appear after expanding People Names");
+        Assert.assertTrue(expandableListPage.arePeopleNamesChildrenDisplayed());
 
         expandableListPage.tapDogNamesGroup();
 
         expandableListPage.tapPeopleNamesGroup();
-        Assert.assertFalse(expandableListPage.arePeopleNamesChildrenDisplayed(),
-                "All children should disappear after collapsing People Names");
+        Assert.assertFalse(expandableListPage.arePeopleNamesChildrenDisplayed());
     }
 }

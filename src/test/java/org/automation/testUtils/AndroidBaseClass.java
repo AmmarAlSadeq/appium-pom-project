@@ -1,7 +1,5 @@
 package org.automation.testUtils;
 
-import java.io.IOException;
-
 import io.appium.java_client.android.AndroidDriver;
 import org.automation.config.DriverFactory;
 import org.automation.utils.AppiumUtils;
@@ -9,13 +7,17 @@ import org.automation.utils.ScrollHelper;
 import org.automation.utils.SwipeHelper;
 import org.automation.utils.WaitHelper;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Listeners;
 
 /**
  * Base class for Android test automation.
- * Uses DriverFactory for driver lifecycle, keeps AppiumUtils server management.
+ * Server lifecycle managed at suite level; driver per class; app reset per method.
  */
+@Listeners(org.automation.testUtils.Listeners.class)
 public class AndroidBaseClass extends AppiumUtils {
 
     public AndroidDriver driver;
@@ -24,14 +26,20 @@ public class AndroidBaseClass extends AppiumUtils {
     public SwipeHelper swipeHelper;
 
     /**
-     * Starts Appium server and initializes AndroidDriver via DriverFactory.
-     *
-     * @throws IOException if config.properties cannot be read.
+     * Starts Appium server once before the entire test suite.
      */
-    @BeforeClass(alwaysRun = true)
-    public void configureAppium() throws IOException {
+    @BeforeSuite(alwaysRun = true)
+    public static void startAppiumServer() {
         DriverFactory factory = DriverFactory.getInstance();
         factory.startService();
+    }
+
+    /**
+     * Creates AndroidDriver and initializes helpers for each test class.
+     */
+    @BeforeClass(alwaysRun = true)
+    public void configureAppium() {
+        DriverFactory factory = DriverFactory.getInstance();
         driver = factory.getDriver();
 
         waitHelper = new WaitHelper(driver);
@@ -40,21 +48,32 @@ public class AndroidBaseClass extends AppiumUtils {
     }
 
     /**
-     * Resets the app to the home screen before each test method (including retries).
+     * Resets the app before each test method to ensure clean state for retries.
      */
     @BeforeMethod(alwaysRun = true)
-    public void resetAppToHome() {
-        driver.terminateApp("io.appium.android.apis");
-        driver.activateApp("io.appium.android.apis");
+    public void resetApp() {
+        if (driver != null) {
+            String appPackage = DriverFactory.getInstance().getProperties().getProperty("appPackage");
+            driver.terminateApp(appPackage);
+            driver.activateApp(appPackage);
+        }
     }
 
     /**
-     * Quits the driver and stops the Appium server.
+     * Quits the driver after each test class.
      */
     @AfterClass(alwaysRun = true)
     public void tearDown() {
         DriverFactory factory = DriverFactory.getInstance();
         factory.quitDriver();
+    }
+
+    /**
+     * Stops the Appium server after the entire test suite.
+     */
+    @AfterSuite(alwaysRun = true)
+    public static void stopAppiumServer() {
+        DriverFactory factory = DriverFactory.getInstance();
         factory.stopService();
     }
 }

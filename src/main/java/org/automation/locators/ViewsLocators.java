@@ -6,7 +6,6 @@ package org.automation.locators;
  */
 public class ViewsLocators {
 
-    public static final String VIEWS_LIST = "android:id/list";
     public static final String EXPANDABLE_LISTS = "Expandable Lists";
     public static final String LAYOUTS = "Layouts";
     public static final String DRAG_AND_DROP = "Drag and Drop";

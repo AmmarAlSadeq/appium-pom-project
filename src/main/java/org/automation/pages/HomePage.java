@@ -2,18 +2,17 @@ package org.automation.pages;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
+import org.automation.base.BasePage;
 import org.automation.locators.HomeLocators;
 import org.openqa.selenium.WebElement;
 
 /**
  * Page object for the ApiDemos Home screen.
  */
-public class HomePage {
-
-    AndroidDriver driver;
+public class HomePage extends BasePage {
 
     public HomePage(AndroidDriver driver) {
-        this.driver = driver;
+        super(driver);
     }
 
     private WebElement viewsCategory() {
@@ -24,6 +23,10 @@ public class HomePage {
         return driver.findElement(AppiumBy.accessibilityId(HomeLocators.APP));
     }
 
+    private WebElement textCategory() {
+        return driver.findElement(AppiumBy.accessibilityId(HomeLocators.TEXT));
+    }
+
     /**
      * Checks if a specific category is displayed using accessibility ID.
      *
@@ -31,11 +34,7 @@ public class HomePage {
      * @return true if the category is visible, false otherwise.
      */
     public boolean isCategoryDisplayed(String accessibilityId) {
-        try {
-            return driver.findElement(AppiumBy.accessibilityId(accessibilityId)).isDisplayed();
-        } catch (Exception e) {
-            return false;
-        }
+        return isElementDisplayed(driver.findElement(AppiumBy.accessibilityId(accessibilityId)));
     }
 
     /**
@@ -69,5 +68,12 @@ public class HomePage {
      */
     public void openAppPage() {
         appCategory().click();
+    }
+
+    /**
+     * Opens the Text page by tapping the Text category.
+     */
+    public void openTextPage() {
+        textCategory().click();
     }
 }

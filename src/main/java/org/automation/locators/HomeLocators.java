@@ -6,8 +6,6 @@ package org.automation.locators;
  */
 public class HomeLocators {
 
-    public static final String CATEGORY_LIST = "android:id/list";
-
     public static final String ACCESSIBILITY = "Accessibility";
     public static final String ANIMATION = "Animation";
     public static final String APP = "App";

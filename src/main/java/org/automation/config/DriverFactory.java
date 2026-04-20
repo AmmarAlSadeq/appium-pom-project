@@ -109,7 +109,8 @@ public class DriverFactory {
         System.out.println("APK Path: " + apkPath);
 
         driver = new AndroidDriver(service.getUrl(), options);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(
+                Integer.parseInt(properties.getProperty("defaultWaitTimeout"))));
     }
 
     /**
