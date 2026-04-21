@@ -11,7 +11,7 @@ on:
 
 jobs:
   test:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -44,6 +44,12 @@ jobs:
         run: |
           curl -L -o src/main/java/org/automation/resources/ApiDemos-debug.apk \
             https://github.com/appium/android-apidemos/releases/download/v6.0.6/ApiDemos-debug.apk
+          
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
 
       - name: Run tests on emulator
         uses: reactivecircus/android-emulator-runner@v2
