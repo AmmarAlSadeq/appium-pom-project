@@ -62,18 +62,13 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           disable-animations: true
           script: |
-            # Start Appium server in background
+            mkdir -p /home/runner/.npm-global/lib/node_modules/appium/build/lib/
+            ln -s $(which appium) /home/runner/.npm-global/lib/node_modules/appium/build/lib/main.js
             appium --address 127.0.0.1 --port 4723 &
             APPIUM_PID=$!
             echo "Appium PID: $APPIUM_PID"
-            
-            # Wait for Appium to be ready
             sleep 10
-            
-            # Run tests
             mvn clean test
-            
-            # Kill Appium
             kill $APPIUM_PID || true
 
       - name: Upload ExtentReport
