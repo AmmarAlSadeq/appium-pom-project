@@ -46,12 +46,21 @@ public abstract class AppiumUtils {
      * @return The started AppiumDriverLocalService instance.
      */
     public AppiumDriverLocalService startAppiumServer(String ipAddress, int port) {
-        // Initialize Appium Service
+        String os = System.getProperty("os.name").toLowerCase();
+        String appiumMainPath;
+        if (os.contains("win")) {
+            appiumMainPath = System.getProperty("user.home")
+                    + "\\AppData\\Roaming\\npm\\node_modules\\appium\\build\\lib\\main.js";
+        } else {
+            appiumMainPath = System.getProperty("user.home")
+                    + "/.npm-global/lib/node_modules/appium/build/lib/main.js";
+        }
+
         service = new AppiumServiceBuilder()
-                .withAppiumJS(new File(System.getProperty("user.home") + "\\AppData\\Roaming\\npm\\node_modules\\appium\\build\\lib\\main.js"))
+                .withAppiumJS(new File(appiumMainPath))
                 .withIPAddress(ipAddress)
                 .usingPort(port)
-                .withArgument(GeneralServerFlag.SESSION_OVERRIDE)  // Allows overriding sessions
+                .withArgument(GeneralServerFlag.SESSION_OVERRIDE)
                 .withTimeout(Duration.ofSeconds(60))
                 .build();
 

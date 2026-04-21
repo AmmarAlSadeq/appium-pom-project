@@ -25,15 +25,18 @@ public class ProgressBarTest extends AndroidBaseClass {
         viewsPage.openProgressBar();
         progressBarPage.openIncremental();
 
-        Assert.assertTrue(progressBarPage.isProgressBarDisplayed());
+        Assert.assertTrue(progressBarPage.isProgressBarDisplayed(),
+                "Progress bar should be displayed on incremental screen");
 
         // Increase by 10% five times
         double previousValue = progressBarPage.getProgressValue();
         for (int i = 0; i < 5; i++) {
             progressBarPage.tapIncrease();
             double currentValue = progressBarPage.getProgressValue();
-            Assert.assertTrue(currentValue >= previousValue);
-            Assert.assertTrue(currentValue <= 100);
+            Assert.assertTrue(currentValue >= previousValue,
+                    "Progress should increase or stay same after tapping Increase");
+            Assert.assertTrue(currentValue <= 100,
+                    "Progress should not exceed 100%");
             previousValue = currentValue;
         }
 
@@ -41,8 +44,10 @@ public class ProgressBarTest extends AndroidBaseClass {
         for (int i = 0; i < 3; i++) {
             progressBarPage.tapDecrease();
             double currentValue = progressBarPage.getProgressValue();
-            Assert.assertTrue(currentValue <= previousValue);
-            Assert.assertTrue(currentValue >= 0);
+            Assert.assertTrue(currentValue <= previousValue,
+                    "Progress should decrease or stay same after tapping Decrease");
+            Assert.assertTrue(currentValue >= 0,
+                    "Progress should not go below 0%");
             previousValue = currentValue;
         }
     }

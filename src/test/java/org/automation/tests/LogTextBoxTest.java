@@ -28,11 +28,13 @@ public class LogTextBoxTest extends AndroidBaseClass {
         logTextBoxPage.typeText("Appium POM Test ");
         logTextBoxPage.tapAdd();
 
-        Assert.assertEquals(logTextBoxPage.getLogText(), "Appium POM Test This is a test\n");
+        Assert.assertEquals(logTextBoxPage.getLogText(), "Appium POM Test This is a test\n",
+                "Log should contain first entry after Add");
 
         logTextBoxPage.typeText("Automation Engineer ");
         logTextBoxPage.tapAdd();
 
-        Assert.assertEquals(logTextBoxPage.getLogText(), "Appium POM Test This is a test\nAutomation Engineer This is a test\n");
+        Assert.assertEquals(logTextBoxPage.getLogText(), "Appium POM Test This is a test\nAutomation Engineer This is a test\n",
+                "Log should contain both entries after second Add");
     }
 }

@@ -28,8 +28,11 @@ public class ScrollViewTest extends AndroidBaseClass {
         layoutsPage.openScrollView();
         scrollViewPage.openLongScrollView();
         String firstElementText = scrollViewPage.getFirstElementText();
-        Assert.assertTrue(scrollViewPage.scrollToBottom());
-        Assert.assertTrue(scrollViewPage.scrollToTop());
-        Assert.assertTrue(scrollViewPage.isElementWithTextDisplayed(firstElementText));
+        Assert.assertTrue(scrollViewPage.scrollToBottom(),
+                "Should scroll to the bottom of the content");
+        Assert.assertTrue(scrollViewPage.scrollToTop(),
+                "Should scroll back to the top of the content");
+        Assert.assertTrue(scrollViewPage.isElementWithTextDisplayed(firstElementText),
+                "First element should be visible again after scrolling to top");
     }
 }

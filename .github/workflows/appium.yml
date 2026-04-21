@@ -1,14 +1,17 @@
 name: Appium Android Tests
 
 on:
+  schedule:
+    - cron: '0 0 * * *'
   push:
-    branches: [ main, develop ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   test:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -27,47 +30,56 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Install Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
 
-      - name: Install Appium
-        run: npm install -g appium@2.0
-
-      - name: Install UiAutomator2 driver
-        run: appium driver install uiautomator2
-
-      - name: Launch Android Emulator
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          arch: x86_64
-          profile: pixel_3a
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
-          disable-animations: true
-          script: echo "Emulator started"
+      - name: Install Appium and UiAutomator2 driver
+        run: |
+          npm install -g appium@2
+          appium driver install uiautomator2
 
       - name: Download APK
         run: |
-          mkdir -p src/main/java/org/automation/resources
-          curl -L -o src/main/java/org/automation/resources/ApiDemos-debug.apk https://github.com/appium/android-apidemos/releases/download/v6.0.6/ApiDemos-debug.apk
+          curl -L -o src/main/java/org/automation/resources/ApiDemos-debug.apk \
+            https://github.com/appium/android-apidemos/releases/download/v6.0.6/ApiDemos-debug.apk
 
-      - name: Run tests
-        run: mvn clean test
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
 
-      - name: Upload test reports
+      - name: Run tests on emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 27
+          arch: x86_64
+          profile: pixel_5
+          heap-size: 512M
+          ram-size: 4096M
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          disable-animations: true
+          script: mvn clean test
+
+      - name: Upload ExtentReport
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-reports
-          path: |
-            reports/
-            target/surefire-reports/
+          name: extent-report
+          path: src/reports/extent-report.html
 
       - name: Upload failure screenshots
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: failure-screenshots
-          path: reports/screenshots/
+          path: src/reports/screenshots/
+
+      - name: Upload Surefire reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: target/surefire-reports/

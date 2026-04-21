@@ -25,7 +25,8 @@ public class ListsTest extends AndroidBaseClass {
         viewsPage.openListsPage();
         listsPage.openListAdapter();
 
-        Assert.assertTrue(listsPage.scrollUntilTargetItem());
+        Assert.assertTrue(listsPage.scrollUntilTargetItem(),
+                "Should find target item after dynamic scrolling");
     }
     // Note: The task references scrolling to "Gingerbread", but ApiDemos v6.0.6 ListAdapter
     // contains Shakespeare characters (e.g., "King Lear"). Target item adjusted accordingly.
