@@ -11,6 +11,11 @@ import org.openqa.selenium.WebElement;
  */
 public class DragDropPage extends AndroidActions {
 
+    /**
+     * Constructs a new DragDropPage instance.
+     *
+     * @param driver The AndroidDriver instance.
+     */
     public DragDropPage(AndroidDriver driver) {
         super(driver);
     }

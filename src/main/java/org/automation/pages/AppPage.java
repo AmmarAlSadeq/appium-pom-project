@@ -11,6 +11,11 @@ import org.openqa.selenium.WebElement;
  */
 public class AppPage extends BasePage {
 
+    /**
+     * Constructs a new AppPage instance.
+     *
+     * @param driver The AndroidDriver instance.
+     */
     public AppPage(AndroidDriver driver) {
         super(driver);
     }

@@ -3,7 +3,6 @@ package org.automation.utils;
 import java.time.Duration;
 
 import io.appium.java_client.android.AndroidDriver;
-import org.automation.config.DriverFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
@@ -33,7 +32,7 @@ public class WaitHelper {
 
     private static int loadTimeout() {
         try {
-            return Integer.parseInt(DriverFactory.getInstance().getProperties().getProperty("defaultWaitTimeout"));
+            return Integer.parseInt(ConfigReader.get("defaultWaitTimeout"));
         } catch (Exception e) {
             return 15;
         }

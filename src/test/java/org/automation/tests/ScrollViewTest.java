@@ -10,8 +10,9 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * TC-002: ScrollView — Scroll to Bottom and Back.
- * Navigation: Home -> Views -> Layouts -> ScrollView -> 2. Long
+ * ScrollView Test Suite.
+ * Contains all test cases related to the ScrollView screen.
+ * Navigation: Home -> Views -> Layouts -> ScrollView
  */
 public class ScrollViewTest extends AndroidBaseClass {
 

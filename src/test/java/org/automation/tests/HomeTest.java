@@ -9,6 +9,7 @@ import org.testng.annotations.Test;
 
 /**
  * Home Screen Test Suite.
+ * Contains all test cases related to the Home screen.
  */
 public class HomeTest extends AndroidBaseClass {
 

@@ -3,6 +3,7 @@ package org.automation.testUtils;
 import io.appium.java_client.android.AndroidDriver;
 import org.automation.config.DriverFactory;
 import org.automation.utils.AppiumUtils;
+import org.automation.utils.ConfigReader;
 import org.automation.utils.ScrollHelper;
 import org.automation.utils.SwipeHelper;
 import org.automation.utils.WaitHelper;
@@ -53,7 +54,7 @@ public class AndroidBaseClass extends AppiumUtils {
     @BeforeMethod(alwaysRun = true)
     public void resetApp() {
         if (driver != null) {
-            String appPackage = DriverFactory.getInstance().getProperties().getProperty("appPackage");
+            String appPackage = ConfigReader.get("appPackage");
             driver.terminateApp(appPackage);
             driver.activateApp(appPackage);
         }

@@ -14,6 +14,11 @@ public class ListsPage extends AndroidActions {
 
     private final ScrollHelper scrollHelper;
 
+    /**
+     * Constructs a ListsPage with the given driver.
+     *
+     * @param driver The AndroidDriver instance.
+     */
     public ListsPage(AndroidDriver driver) {
         super(driver);
         this.scrollHelper = new ScrollHelper(driver);

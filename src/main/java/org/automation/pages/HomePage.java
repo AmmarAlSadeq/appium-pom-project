@@ -11,6 +11,11 @@ import org.openqa.selenium.WebElement;
  */
 public class HomePage extends BasePage {
 
+    /**
+     * Constructs a new HomePage instance.
+     *
+     * @param driver The AndroidDriver instance.
+     */
     public HomePage(AndroidDriver driver) {
         super(driver);
     }

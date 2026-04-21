@@ -27,6 +27,7 @@ public class ScrollHelper {
      * Sets the maximum number of scroll retry attempts.
      *
      * @param max The maximum number of swipes.
+     * @throws IllegalArgumentException if max is negative.
      */
     public void setMaxSwipes(int max) {
         this.maxSwipes = max;

@@ -1,28 +1,24 @@
 package org.automation.config;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.time.Duration;
-import java.util.Properties;
 
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import org.automation.utils.AppiumUtils;
+import org.automation.utils.ConfigReader;
 
 /**
  * Singleton factory for managing AndroidDriver lifecycle.
- * Reads capabilities from config.properties and creates a single driver instance.
+ * Uses ConfigReader for capabilities and creates a single driver instance.
  */
 public class DriverFactory {
 
     private static DriverFactory instance;
     private static AndroidDriver driver;
     private static AppiumDriverLocalService service;
-    private static Properties properties;
 
     private DriverFactory() {
-        loadConfig();
     }
 
     /**
@@ -39,22 +35,6 @@ public class DriverFactory {
     }
 
     /**
-     * Loads configuration properties from config.properties file.
-     *
-     * @throws RuntimeException if the config file cannot be found or read.
-     */
-    private void loadConfig() {
-        properties = new Properties();
-        try {
-            String configPath = System.getProperty("user.dir") + "//src//main//java//org//automation//resources//config.properties";
-            FileInputStream fis = new FileInputStream(configPath);
-            properties.load(fis);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load config.properties: " + e.getMessage(), e);
-        }
-    }
-
-    /**
      * Starts the Appium server using the existing AppiumUtils logic.
      *
      * @throws RuntimeException if the server fails to start.
@@ -62,8 +42,8 @@ public class DriverFactory {
     public void startService() {
         String ipAddress = System.getProperty("ipAddress") != null
                 ? System.getProperty("ipAddress")
-                : properties.getProperty("ipAddress");
-        int port = Integer.parseInt(properties.getProperty("port"));
+                : ConfigReader.get("ipAddress");
+        int port = Integer.parseInt(ConfigReader.get("port"));
         AppiumUtils appiumUtils = new AppiumUtils() {};
         service = appiumUtils.startAppiumServer(ipAddress, port);
 
@@ -90,10 +70,10 @@ public class DriverFactory {
      * Creates a new AndroidDriver with UiAutomator2Options from config.
      */
     private void createDriver() {
-        String androidDeviceName = properties.getProperty("androidDeviceName");
-        String appPackage = properties.getProperty("appPackage");
-        String appActivity = properties.getProperty("appActivity");
-        String apkFileName = properties.getProperty("apkFileName");
+        String androidDeviceName = ConfigReader.get("androidDeviceName");
+        String appPackage = ConfigReader.get("appPackage");
+        String appActivity = ConfigReader.get("appActivity");
+        String apkFileName = ConfigReader.get("apkFileName");
         String apkPath = System.getProperty("user.dir") + "//src//main//java//org//automation//resources//" + apkFileName;
 
         UiAutomator2Options options = new UiAutomator2Options();
@@ -110,7 +90,7 @@ public class DriverFactory {
 
         driver = new AndroidDriver(service.getUrl(), options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(
-                Integer.parseInt(properties.getProperty("defaultWaitTimeout"))));
+                Integer.parseInt(ConfigReader.get("defaultWaitTimeout"))));
     }
 
     /**
@@ -132,12 +112,4 @@ public class DriverFactory {
         }
     }
 
-    /**
-     * Returns the loaded properties for external access.
-     *
-     * @return The Properties instance loaded from config.properties.
-     */
-    public Properties getProperties() {
-        return properties;
-    }
 }

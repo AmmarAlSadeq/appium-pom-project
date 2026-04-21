@@ -14,6 +14,11 @@ public class ViewsPage extends AndroidActions {
 
     private final ScrollHelper scrollHelper;
 
+    /**
+     * Constructs a new ViewsPage instance.
+     *
+     * @param driver The AndroidDriver instance.
+     */
     public ViewsPage(AndroidDriver driver) {
         super(driver);
         this.scrollHelper = new ScrollHelper(driver);

@@ -44,6 +44,7 @@ public abstract class AppiumUtils {
      * @param ipAddress The IP address to bind the Appium server to.
      * @param port      The port to run the Appium server on.
      * @return The started AppiumDriverLocalService instance.
+     * @throws RuntimeException if the Appium server fails to start.
      */
     public AppiumDriverLocalService startAppiumServer(String ipAddress, int port) {
         String os = System.getProperty("os.name").toLowerCase();

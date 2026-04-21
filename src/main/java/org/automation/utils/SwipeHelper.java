@@ -31,6 +31,7 @@ public class SwipeHelper {
      *
      * @param durationMs Duration of the swipe in milliseconds.
      * @param offset     Percentage of screen width to swipe (0.0 to 1.0).
+     * @throws org.openqa.selenium.WebDriverException if the swipe gesture fails to execute.
      */
     public void swipeLeft(int durationMs, double offset) {
         int height = driver.manage().window().getSize().getHeight();
@@ -54,6 +55,7 @@ public class SwipeHelper {
      *
      * @param durationMs Duration of the swipe in milliseconds.
      * @param offset     Percentage of screen width to swipe (0.0 to 1.0).
+     * @throws org.openqa.selenium.WebDriverException if the swipe gesture fails to execute.
      */
     public void swipeRight(int durationMs, double offset) {
         int height = driver.manage().window().getSize().getHeight();
@@ -77,6 +79,7 @@ public class SwipeHelper {
      *
      * @param durationMs Duration of the swipe in milliseconds.
      * @param offset     Percentage of screen height to swipe (0.0 to 1.0).
+     * @throws org.openqa.selenium.WebDriverException if the swipe gesture fails to execute.
      */
     public void swipeUp(int durationMs, double offset) {
         int height = driver.manage().window().getSize().getHeight();
@@ -100,6 +103,7 @@ public class SwipeHelper {
      *
      * @param durationMs Duration of the swipe in milliseconds.
      * @param offset     Percentage of screen height to swipe (0.0 to 1.0).
+     * @throws org.openqa.selenium.WebDriverException if the swipe gesture fails to execute.
      */
     public void swipeDown(int durationMs, double offset) {
         int height = driver.manage().window().getSize().getHeight();
@@ -124,6 +128,7 @@ public class SwipeHelper {
      * @param startX Starting X coordinate.
      * @param startY Y coordinate (constant for horizontal swipe).
      * @param endX   Ending X coordinate.
+     * @throws org.openqa.selenium.WebDriverException if the swipe gesture fails to execute.
      */
     public void horizontalSwipe(int startX, int startY, int endX) {
         performSwipe(startX, startY, endX, startY, DEFAULT_DURATION_MS);
@@ -135,6 +140,7 @@ public class SwipeHelper {
      * @param startX X coordinate (constant for vertical swipe).
      * @param startY Starting Y coordinate.
      * @param endY   Ending Y coordinate.
+     * @throws org.openqa.selenium.WebDriverException if the swipe gesture fails to execute.
      */
     public void verticalSwipe(int startX, int startY, int endY) {
         performSwipe(startX, startY, startX, endY, DEFAULT_DURATION_MS);
