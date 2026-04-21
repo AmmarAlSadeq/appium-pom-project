@@ -68,8 +68,8 @@ jobs:
             APPIUM_PID=$!
             echo "Appium PID: $APPIUM_PID"
             sleep 10
-            mvn clean test
-            kill $APPIUM_PID || true
+            mvn clean test || true
+            pkill -f appium || true
 
       - name: Upload ExtentReport
         if: always()
