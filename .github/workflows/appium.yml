@@ -69,6 +69,9 @@ jobs:
             echo "Appium PID: $APPIUM_PID"
             sleep 10
             mvn clean test || true
+            echo "Stopping Appium..."
+            kill $APPIUM_PID || true
+            killall node || true
 
       - name: Upload ExtentReport
         if: always()
