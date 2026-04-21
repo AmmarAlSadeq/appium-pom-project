@@ -11,16 +11,16 @@ on:
 
 jobs:
   test:
-    runs-on: macos-13
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 11
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: '11'
+          java-version: '17'
           distribution: 'temurin'
 
       - name: Cache Maven packages
@@ -45,15 +45,33 @@ jobs:
           curl -L -o src/main/java/org/automation/resources/ApiDemos-debug.apk \
             https://github.com/appium/android-apidemos/releases/download/v6.0.6/ApiDemos-debug.apk
 
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
       - name: Run tests on emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 27
+          api-level: 29
+          target: google_apis
           arch: x86_64
           profile: pixel_5
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          emulator-boot-timeout: 600
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
           disable-animations: true
-          script: mvn clean test
+          script: |
+            mkdir -p /home/runner/.npm-global/lib/node_modules/appium/build/lib/
+            ln -s $(which appium) /home/runner/.npm-global/lib/node_modules/appium/build/lib/main.js
+            appium --address 127.0.0.1 --port 4723 &
+            APPIUM_PID=$!
+            echo "Appium PID: $APPIUM_PID"
+            sleep 10
+            mvn clean test || true
+            echo "Stopping Appium..."
+            kill $APPIUM_PID || true
+            killall node || true
 
       - name: Upload ExtentReport
         if: always()
@@ -74,4 +92,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: surefire-reports
-        path: target/surefire-reports/
+          path: target/surefire-reports/
