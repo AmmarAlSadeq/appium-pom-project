@@ -24,6 +24,7 @@ public class DragDropTest extends AndroidBaseClass {
         homePage.openViewsPage();
         viewsPage.openDragAndDrop();
         dragDropPage.dragDot1ToDot2();
-        Assert.assertEquals(dragDropPage.getResultText(), "Dropped!");
+        Assert.assertEquals(dragDropPage.getResultText(), "Dropped!",
+                "Result text should show 'Dropped!' after successful drag and drop");
     }
 }

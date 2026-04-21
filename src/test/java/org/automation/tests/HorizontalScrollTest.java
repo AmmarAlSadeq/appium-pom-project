@@ -25,16 +25,20 @@ public class HorizontalScrollTest extends AndroidBaseClass {
         LayoutsPage layoutsPage = new LayoutsPage(driver);
         HorizontalScrollPage horizontalScrollPage = new HorizontalScrollPage(driver);
 
-        Assert.assertTrue(homePage.areAllCategoriesDisplayed());
+        Assert.assertTrue(homePage.areAllCategoriesDisplayed(),
+                "All 11 categories should be displayed on home screen");
 
         homePage.openViewsPage();
-        Assert.assertTrue(viewsPage.isExpandableListsDisplayed());
+        Assert.assertTrue(viewsPage.isExpandableListsDisplayed(),
+                "Views sub-menu should be visible after tapping Views");
 
         viewsPage.openLayouts();
         layoutsPage.openHorizontalScrollView();
 
-        Assert.assertTrue(horizontalScrollPage.isScrollViewDisplayed());
-        Assert.assertFalse(horizontalScrollPage.getContentText().isEmpty());
+        Assert.assertTrue(horizontalScrollPage.isScrollViewDisplayed(),
+                "HorizontalScrollView should be displayed");
+        Assert.assertFalse(horizontalScrollPage.getContentText().isEmpty(),
+                "HorizontalScrollView should have text content");
 
         BufferedImage beforeSwipe = horizontalScrollPage.captureScrollViewScreenshot();
 
@@ -42,12 +46,14 @@ public class HorizontalScrollTest extends AndroidBaseClass {
 
         BufferedImage afterSwipeLeft = horizontalScrollPage.captureScrollViewScreenshot();
         double diffAfterLeft = horizontalScrollPage.getImageDifferencePercent(beforeSwipe, afterSwipeLeft);
-        Assert.assertTrue(diffAfterLeft > 0.03);
+        Assert.assertTrue(diffAfterLeft > 0.03,
+                "Screen should change after swiping left");
 
         horizontalScrollPage.swipeRight();
 
         BufferedImage afterSwipeRight = horizontalScrollPage.captureScrollViewScreenshot();
         double diffAfterRight = horizontalScrollPage.getImageDifferencePercent(beforeSwipe, afterSwipeRight);
-        Assert.assertTrue(diffAfterRight < 0.06);
+        Assert.assertTrue(diffAfterRight < 0.06,
+                "Screen should restore to original after swiping right");
     }
 }

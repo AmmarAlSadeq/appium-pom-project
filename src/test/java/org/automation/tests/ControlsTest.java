@@ -25,20 +25,25 @@ public class ControlsTest extends AndroidBaseClass {
         viewsPage.openControls();
         controlsPage.openLightTheme();
 
-        Assert.assertTrue(controlsPage.isButtonClickable());
+        Assert.assertTrue(controlsPage.isButtonClickable(),
+                "Button should be clickable");
 
         controlsPage.toggleCheckbox();
-        Assert.assertTrue(controlsPage.isCheckboxChecked());
+        Assert.assertTrue(controlsPage.isCheckboxChecked(),
+                "Checkbox should be checked after toggle ON");
 
         controlsPage.toggleCheckbox();
-        Assert.assertFalse(controlsPage.isCheckboxChecked());
+        Assert.assertFalse(controlsPage.isCheckboxChecked(),
+                "Checkbox should be unchecked after toggle OFF");
 
         controlsPage.selectRadio1();
-        Assert.assertTrue(controlsPage.isRadio1Selected());
+        Assert.assertTrue(controlsPage.isRadio1Selected(),
+                "Radio button 1 should be selected");
 
         boolean initialToggleState = controlsPage.isToggleButtonOn();
         controlsPage.tapToggleButton();
-        Assert.assertNotEquals(controlsPage.isToggleButtonOn(), initialToggleState);
+        Assert.assertNotEquals(controlsPage.isToggleButtonOn(), initialToggleState,
+                "Toggle button state should flip after tap");
     }
     // Note: SeekBar is not present on the Controls > Light Theme screen in ApiDemos v6.0.6.
     // The screen only contains: Button, Checkbox, RadioButton, and ToggleButton.
