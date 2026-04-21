@@ -11,6 +11,11 @@ import org.openqa.selenium.WebElement;
  */
 public class TextPage extends BasePage {
 
+    /**
+     * Constructs a new TextPage instance.
+     *
+     * @param driver The AndroidDriver instance.
+     */
     public TextPage(AndroidDriver driver) {
         super(driver);
     }

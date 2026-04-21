@@ -1,7 +1,6 @@
 package org.automation.pages;
 
 import io.appium.java_client.android.AndroidDriver;
-import org.automation.locators.HorizontalScrollLocators;
 import org.automation.utils.AndroidActions;
 import org.automation.utils.SwipeHelper;
 import org.openqa.selenium.By;
@@ -20,6 +19,11 @@ public class HorizontalScrollPage extends AndroidActions {
 
     private final SwipeHelper swipeHelper;
 
+    /**
+     * Constructs a HorizontalScrollPage with the given driver.
+     *
+     * @param driver The AndroidDriver instance.
+     */
     public HorizontalScrollPage(AndroidDriver driver) {
         super(driver);
         this.swipeHelper = new SwipeHelper(driver);
@@ -27,29 +31,6 @@ public class HorizontalScrollPage extends AndroidActions {
 
     private WebElement scrollView() {
         return driver.findElement(By.className("android.widget.HorizontalScrollView"));
-    }
-
-    /**
-     * Checks if the HorizontalScrollView is displayed.
-     *
-     * @return true if the scroll view is visible.
-     */
-    public boolean isScrollViewDisplayed() {
-        return isElementDisplayed(scrollView());
-    }
-
-    /**
-     * Gets the text content of the HorizontalScrollView.
-     *
-     * @return The text content, or empty string if not found.
-     */
-    public String getContentText() {
-        try {
-            WebElement content = driver.findElement(By.xpath(HorizontalScrollLocators.CONTENT_TEXT));
-            return content.getText();
-        } catch (Exception e) {
-            return "";
-        }
     }
 
     /**
@@ -89,18 +70,6 @@ public class HorizontalScrollPage extends AndroidActions {
     }
 
     /**
-     * Compares two images with a tolerance percentage.
-     *
-     * @param img1      First image (before).
-     * @param img2      Second image (after).
-     * @param tolerance Percentage of pixels that must differ (0.0 to 1.0).
-     * @return true if images differ beyond the tolerance threshold.
-     */
-    public boolean isImageDifferent(BufferedImage img1, BufferedImage img2, double tolerance) {
-        return getImageDifferencePercent(img1, img2) > tolerance;
-    }
-
-    /**
      * Calculates the percentage of differing pixels between two images.
      *
      * @param img1 First image.
@@ -121,5 +90,40 @@ public class HorizontalScrollPage extends AndroidActions {
             }
         }
         return (double) diffPixels / totalPixels;
+    }
+
+    private BufferedImage referenceScreenshot;
+
+    /**
+     * Captures a reference screenshot of the scroll view for later comparison.
+     *
+     * @throws Exception if screenshot capture fails.
+     */
+    public void captureReference() throws Exception {
+        referenceScreenshot = captureScrollViewScreenshot();
+    }
+
+    /**
+     * Swipes left and verifies the screen content has changed.
+     *
+     * @return true if screen changed beyond 3% threshold.
+     * @throws Exception if screenshot capture fails.
+     */
+    public boolean isContentChangedAfterSwipeLeft() throws Exception {
+        swipeLeft();
+        BufferedImage after = captureScrollViewScreenshot();
+        return getImageDifferencePercent(referenceScreenshot, after) > 0.03;
+    }
+
+    /**
+     * Swipes right and verifies the screen content has restored to the reference.
+     *
+     * @return true if screen matches reference within 6% tolerance.
+     * @throws Exception if screenshot capture fails.
+     */
+    public boolean isContentRestoredAfterSwipeRight() throws Exception {
+        swipeRight();
+        BufferedImage after = captureScrollViewScreenshot();
+        return getImageDifferencePercent(referenceScreenshot, after) < 0.06;
     }
 }

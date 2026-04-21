@@ -11,6 +11,11 @@ import org.openqa.selenium.WebElement;
  */
 public class ExpandableListPage extends BasePage {
 
+    /**
+     * Constructs an ExpandableListPage with the given driver.
+     *
+     * @param driver The AndroidDriver instance.
+     */
     public ExpandableListPage(AndroidDriver driver) {
         super(driver);
     }

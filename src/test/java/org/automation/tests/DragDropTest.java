@@ -9,7 +9,8 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * TC-003: Drag and Drop — Long-Press, Drag Dot & Verify EditText Updates.
+ * Drag and Drop Test Suite.
+ * Contains all test cases related to the Drag and Drop screen.
  * Navigation: Home -> Views -> Drag and Drop
  */
 public class DragDropTest extends AndroidBaseClass {

@@ -9,8 +9,9 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * TC-005: Controls > Light Theme — Interact with All Input Controls.
- * Navigation: Home -> Views -> Controls -> 1. Light Theme
+ * Controls Test Suite.
+ * Contains all test cases related to the Controls screen.
+ * Navigation: Home -> Views -> Controls
  */
 public class ControlsTest extends AndroidBaseClass {
 
@@ -24,22 +25,17 @@ public class ControlsTest extends AndroidBaseClass {
         homePage.openViewsPage();
         viewsPage.openControls();
         controlsPage.openLightTheme();
-
         Assert.assertTrue(controlsPage.isButtonClickable(),
                 "Button should be clickable");
-
         controlsPage.toggleCheckbox();
         Assert.assertTrue(controlsPage.isCheckboxChecked(),
                 "Checkbox should be checked after toggle ON");
-
         controlsPage.toggleCheckbox();
         Assert.assertFalse(controlsPage.isCheckboxChecked(),
                 "Checkbox should be unchecked after toggle OFF");
-
         controlsPage.selectRadio1();
         Assert.assertTrue(controlsPage.isRadio1Selected(),
                 "Radio button 1 should be selected");
-
         boolean initialToggleState = controlsPage.isToggleButtonOn();
         controlsPage.tapToggleButton();
         Assert.assertNotEquals(controlsPage.isToggleButtonOn(), initialToggleState,

@@ -12,6 +12,11 @@ import org.openqa.selenium.WebElement;
  */
 public class LogTextBoxPage extends BasePage {
 
+    /**
+     * Constructs a LogTextBoxPage with the given driver.
+     *
+     * @param driver The AndroidDriver instance.
+     */
     public LogTextBoxPage(AndroidDriver driver) {
         super(driver);
     }

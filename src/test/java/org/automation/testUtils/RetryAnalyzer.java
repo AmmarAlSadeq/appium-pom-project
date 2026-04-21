@@ -1,12 +1,12 @@
 package org.automation.testUtils;
 
-import org.automation.config.DriverFactory;
+import org.automation.utils.ConfigReader;
 import org.testng.IRetryAnalyzer;
 import org.testng.ITestResult;
 
 /**
  * Retry analyzer that retries failed tests up to a configurable max count.
- * Reads retryCount from config.properties via DriverFactory.
+ * Reads retryCount from config.properties via ConfigReader.
  */
 public class RetryAnalyzer implements IRetryAnalyzer {
 
@@ -15,7 +15,7 @@ public class RetryAnalyzer implements IRetryAnalyzer {
 
     private static int loadMaxRetry() {
         try {
-            return Integer.parseInt(DriverFactory.getInstance().getProperties().getProperty("retryCount"));
+            return Integer.parseInt(ConfigReader.get("retryCount"));
         } catch (Exception e) {
             return 2;
         }

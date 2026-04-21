@@ -1,0 +1,6 @@
+{
+  "firstInput": "Appium POM Test ",
+  "firstExpectedLog": "Appium POM Test This is a test\n",
+  "secondInput": "Automation Engineer ",
+  "secondExpectedLog": "Appium POM Test This is a test\nAutomation Engineer This is a test\n"
+}

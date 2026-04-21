@@ -14,6 +14,11 @@ public class ScrollViewPage extends AndroidActions {
 
     private final ScrollHelper scrollHelper;
 
+    /**
+     * Constructs a ScrollViewPage with the given driver.
+     *
+     * @param driver The AndroidDriver instance.
+     */
     public ScrollViewPage(AndroidDriver driver) {
         super(driver);
         this.scrollHelper = new ScrollHelper(driver);

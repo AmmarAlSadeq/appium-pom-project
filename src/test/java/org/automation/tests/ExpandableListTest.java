@@ -9,8 +9,9 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * TC-004: Expandable Lists > Custom Adapter — Expand and Collapse Groups.
- * Navigation: Home -> Views -> Expandable Lists -> 1. Custom Adapter
+ * Expandable List Test Suite.
+ * Contains all test cases related to the Expandable Lists screen.
+ * Navigation: Home -> Views -> Expandable Lists
  */
 public class ExpandableListTest extends AndroidBaseClass {
 
@@ -24,15 +25,12 @@ public class ExpandableListTest extends AndroidBaseClass {
         homePage.openViewsPage();
         viewsPage.openExpandableLists();
         expandableListPage.openCustomAdapter();
-
         expandableListPage.tapPeopleNamesGroup();
         Assert.assertTrue(expandableListPage.arePeopleNamesChildrenDisplayed(),
-                "All children should appear after expanding People Names");
-
+                "Children should appear after expanding People Names");
         expandableListPage.tapDogNamesGroup();
-
         expandableListPage.tapPeopleNamesGroup();
         Assert.assertFalse(expandableListPage.arePeopleNamesChildrenDisplayed(),
-                "All children should disappear after collapsing People Names");
+                "Children should disappear after collapsing People Names");
     }
 }

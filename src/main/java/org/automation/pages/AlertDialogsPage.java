@@ -17,6 +17,11 @@ public class AlertDialogsPage extends AndroidActions {
 
     private final ScrollHelper scrollHelper;
 
+    /**
+     * Constructs an AlertDialogsPage with the given driver.
+     *
+     * @param driver The AndroidDriver instance.
+     */
     public AlertDialogsPage(AndroidDriver driver) {
         super(driver);
         this.scrollHelper = new ScrollHelper(driver);
@@ -34,16 +39,8 @@ public class AlertDialogsPage extends AndroidActions {
         return driver.findElement(By.id(AlertDialogsLocators.DIALOG_OK_BUTTON));
     }
 
-    private WebElement dialogCancelButton() {
-        return driver.findElement(By.id(AlertDialogsLocators.DIALOG_CANCEL_BUTTON));
-    }
-
     private WebElement dialogTitle() {
         return driver.findElement(By.id(AlertDialogsLocators.DIALOG_TITLE));
-    }
-
-    private WebElement dialogMessage() {
-        return driver.findElement(By.id(AlertDialogsLocators.DIALOG_MESSAGE));
     }
 
     /**
@@ -87,26 +84,10 @@ public class AlertDialogsPage extends AndroidActions {
     }
 
     /**
-     * Taps the Cancel button on the current dialog.
-     */
-    public void tapDialogCancel() {
-        dialogCancelButton().click();
-    }
-
-    /**
      * Taps the List dialog trigger button.
      */
     public void tapListDialog() {
         listDialogButton().click();
-    }
-
-    /**
-     * Gets the dialog message text.
-     *
-     * @return The message text.
-     */
-    public String getDialogMessage() {
-        return dialogMessage().getText();
     }
 
     /**

@@ -12,6 +12,11 @@ import org.openqa.selenium.WebElement;
  */
 public class ControlsPage extends AndroidActions {
 
+    /**
+     * Constructs a new ControlsPage instance.
+     *
+     * @param driver The AndroidDriver instance.
+     */
     public ControlsPage(AndroidDriver driver) {
         super(driver);
     }

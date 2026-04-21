@@ -11,6 +11,11 @@ import org.openqa.selenium.WebElement;
  */
 public class LayoutsPage extends BasePage {
 
+    /**
+     * Constructs a new LayoutsPage instance.
+     *
+     * @param driver The AndroidDriver instance.
+     */
     public LayoutsPage(AndroidDriver driver) {
         super(driver);
     }
