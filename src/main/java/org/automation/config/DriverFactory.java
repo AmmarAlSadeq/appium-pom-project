@@ -18,7 +18,7 @@ import org.automation.utils.ConfigReader;
  */
 public class DriverFactory {
 
-    private static final int DEVICE_COUNT = 2;
+    private static final int DEVICE_COUNT = loadDeviceCount();
     private static DriverFactory instance;
     private static AppiumDriverLocalService service;
     private static final ConcurrentHashMap<Long, Integer> threadDeviceMap = new ConcurrentHashMap<>();
@@ -27,6 +27,14 @@ public class DriverFactory {
     private static final ThreadLocal<AndroidDriver> driverThreadLocal = new ThreadLocal<>();
 
     private DriverFactory() {
+    }
+
+    private static int loadDeviceCount() {
+        try {
+            return Integer.parseInt(ConfigReader.get("deviceCount"));
+        } catch (Exception e) {
+            return 1;
+        }
     }
 
     /**
