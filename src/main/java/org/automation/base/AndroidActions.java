@@ -1,36 +1,29 @@
 package org.automation.base;
 
+import com.google.common.collect.ImmutableMap;
 import io.appium.java_client.android.AndroidDriver;
 import org.automation.utils.WaitHelper;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebElement;
 
 /**
- * Base page providing shared driver and wait logic for all page objects.
- * Every page extends this directly or through AndroidActions.
+ * Base class for all page objects.
+ * Provides shared driver, wait, element state, and Android gesture methods.
  */
-public class BasePage {
+public class AndroidActions {
 
     protected AndroidDriver driver;
     protected WaitHelper waitHelper;
 
     /**
-     * Initializes the driver and WaitHelper.
+     * Constructs AndroidActions with the given driver.
      *
      * @param driver The AndroidDriver instance.
      */
-    public BasePage(AndroidDriver driver) {
+    public AndroidActions(AndroidDriver driver) {
         this.driver = driver;
         this.waitHelper = new WaitHelper(driver);
-    }
-
-    /**
-     * Waits for the element to be visible, then returns it.
-     *
-     * @param element The WebElement to wait for.
-     * @return The visible WebElement.
-     */
-    protected WebElement waitForElement(WebElement element) {
-        return waitHelper.waitForVisibility(element);
     }
 
     /**
@@ -83,5 +76,34 @@ public class BasePage {
         } catch (Exception e) {
             return "";
         }
+    }
+
+    /**
+     * Performs a long press gesture on the specified element.
+     *
+     * @param element The WebElement to long press.
+     * @throws org.openqa.selenium.WebDriverException if the long press gesture fails to execute.
+     */
+    public void longPressAction(WebElement element) {
+        ((JavascriptExecutor) driver).executeScript("mobile: longClickGesture", ImmutableMap.of(
+                "elementId", ((RemoteWebElement) element).getId(),
+                "duration", 2000
+        ));
+    }
+
+    /**
+     * Performs a drag-and-drop gesture on the specified element to the given coordinates.
+     *
+     * @param element           The WebElement to drag.
+     * @param dropXCoordinates  The X coordinate to drop at.
+     * @param dropYCoordinates  The Y coordinate to drop at.
+     * @throws org.openqa.selenium.WebDriverException if the drag-and-drop gesture fails to execute.
+     */
+    public void dragAndDropAction(WebElement element, int dropXCoordinates, int dropYCoordinates) {
+        ((JavascriptExecutor) driver).executeScript("mobile: dragGesture", ImmutableMap.of(
+                "elementId", ((RemoteWebElement) element).getId(),
+                "endX", dropXCoordinates,
+                "endY", dropYCoordinates
+        ));
     }
 }

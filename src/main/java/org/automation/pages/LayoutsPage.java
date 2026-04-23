@@ -2,14 +2,14 @@ package org.automation.pages;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
-import org.automation.base.BasePage;
+import org.automation.base.AndroidActions;
 import org.automation.locators.LayoutsLocators;
 import org.openqa.selenium.WebElement;
 
 /**
  * Page object for the Layouts sub-menu screen.
  */
-public class LayoutsPage extends BasePage {
+public class LayoutsPage extends AndroidActions {
 
     /**
      * Constructs a new LayoutsPage instance.

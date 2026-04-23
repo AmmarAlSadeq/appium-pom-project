@@ -5,8 +5,9 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
 import org.automation.locators.AlertDialogsLocators;
-import org.automation.utils.AndroidActions;
+import org.automation.base.AndroidActions;
 import org.automation.utils.ScrollHelper;
+import org.automation.utils.WaitHelper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -16,6 +17,7 @@ import org.openqa.selenium.WebElement;
 public class AlertDialogsPage extends AndroidActions {
 
     private final ScrollHelper scrollHelper;
+    private final WaitHelper waitHelper;
 
     /**
      * Constructs an AlertDialogsPage with the given driver.
@@ -25,6 +27,7 @@ public class AlertDialogsPage extends AndroidActions {
     public AlertDialogsPage(AndroidDriver driver) {
         super(driver);
         this.scrollHelper = new ScrollHelper(driver);
+        this.waitHelper = new WaitHelper(driver);
     }
 
     private WebElement okCancelDialogButton() {
@@ -57,16 +60,14 @@ public class AlertDialogsPage extends AndroidActions {
     }
 
     /**
-     * Checks if the dialog has been dismissed.
+     * Checks if the dialog has been dismissed using an explicit wait.
+     * Uses By-locator to avoid implicit wait penalty when the element
+     * is already gone — returns in ~500ms instead of ~15s.
      *
      * @return true if dialog is no longer displayed.
      */
     public boolean isDialogDismissed() {
-        try {
-            return !dialogTitle().isDisplayed();
-        } catch (Exception e) {
-            return true;
-        }
+        return waitHelper.waitUntilInvisibleByLocator(By.id(AlertDialogsLocators.DIALOG_TITLE));
     }
 
     /**

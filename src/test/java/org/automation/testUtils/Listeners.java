@@ -72,24 +72,27 @@ public class Listeners implements ITestListener {
             AndroidDriver driver = (AndroidDriver) result.getInstance().getClass()
                     .getField("driver").get(result.getInstance());
             if (driver != null) {
-                File dir = new File(SCREENSHOT_DIR);
-                if (!dir.exists()) {
-                    dir.mkdirs();
+                String sessionId = driver.getSessionId() != null ? driver.getSessionId().toString() : null;
+                if (sessionId != null) {
+                    File dir = new File(SCREENSHOT_DIR);
+                    if (!dir.exists()) {
+                        dir.mkdirs();
+                    }
+                    String timestamp = new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date());
+                    String screenshotPath = SCREENSHOT_DIR + result.getName() + "_" + timestamp + ".png";
+                    byte[] screenshotBytes = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+                    try (FileOutputStream fos = new FileOutputStream(screenshotPath)) {
+                        fos.write(screenshotBytes);
+                    }
+                    System.out.println("[Listeners] Screenshot saved: " + screenshotPath);
+                    test.fail("Screenshot on failure",
+                            MediaEntityBuilder.createScreenCaptureFromPath("screenshots/" + result.getName() + "_" + timestamp + ".png").build());
                 }
-                String timestamp = new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date());
-                String screenshotPath = SCREENSHOT_DIR + result.getName() + "_" + timestamp + ".png";
-                byte[] screenshotBytes = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
-                try (FileOutputStream fos = new FileOutputStream(screenshotPath)) {
-                    fos.write(screenshotBytes);
-                }
-                System.out.println("[Listeners] Screenshot saved: " + screenshotPath);
-                test.fail("Screenshot on failure",
-                        MediaEntityBuilder.createScreenCaptureFromPath("screenshots/" + result.getName() + "_" + timestamp + ".png").build());
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {
             System.out.println("[Listeners] Could not access driver: " + e.getMessage());
-        } catch (IOException e) {
-            System.out.println("[Listeners] Could not save screenshot: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("[Listeners] Could not capture screenshot: " + e.getMessage());
         }
     }
 
@@ -100,7 +103,17 @@ public class Listeners implements ITestListener {
      */
     @Override
     public void onTestSkipped(ITestResult result) {
-        extentTest.get().log(Status.SKIP, "Test Skipped");
+        ExtentTest test = extentTest.get();
+        if (test == null) {
+            test = extentReport.createTest(result.getMethod().getDescription() != null
+                    ? result.getMethod().getDescription()
+                    : result.getMethod().getMethodName());
+            extentTest.set(test);
+        }
+        test.log(Status.SKIP, "Test Skipped");
+        if (result.getThrowable() != null) {
+            test.skip(result.getThrowable());
+        }
     }
 
     /**

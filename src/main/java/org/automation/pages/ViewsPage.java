@@ -3,7 +3,7 @@ package org.automation.pages;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 import org.automation.locators.ViewsLocators;
-import org.automation.utils.AndroidActions;
+import org.automation.base.AndroidActions;
 import org.automation.utils.ScrollHelper;
 import org.openqa.selenium.WebElement;
 

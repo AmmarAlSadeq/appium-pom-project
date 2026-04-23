@@ -50,31 +50,41 @@ public class AndroidBaseClass extends AppiumUtils {
 
     /**
      * Resets the app before each test method to ensure clean state for retries.
+     * Wraps in try-catch to prevent cascading failures when session is unstable.
      */
     @BeforeMethod(alwaysRun = true)
     public void resetApp() {
         if (driver != null) {
-            String appPackage = ConfigReader.get("appPackage");
-            driver.terminateApp(appPackage);
-            driver.activateApp(appPackage);
+            try {
+                String appPackage = ConfigReader.get("appPackage");
+                driver.terminateApp(appPackage);
+                driver.activateApp(appPackage);
+            } catch (Exception e) {
+                System.out.println("[resetApp] Reset failed, attempting recovery: " + e.getMessage());
+                try {
+                    driver.activateApp(ConfigReader.get("appPackage"));
+                } catch (Exception ignored) {
+                }
+            }
         }
     }
 
     /**
-     * Quits the driver after each test class.
+     * No-op: driver is kept alive across test classes for parallel stability.
+     * All drivers are quit at suite level in stopAppiumServer().
      */
     @AfterClass(alwaysRun = true)
     public void tearDown() {
-        DriverFactory factory = DriverFactory.getInstance();
-        factory.quitDriver();
+        // Driver persists across classes — cleanup happens in @AfterSuite
     }
 
     /**
-     * Stops the Appium server after the entire test suite.
+     * Quits all drivers and stops the Appium server after the entire test suite.
      */
     @AfterSuite(alwaysRun = true)
     public static void stopAppiumServer() {
         DriverFactory factory = DriverFactory.getInstance();
+        factory.quitAllDrivers();
         factory.stopService();
     }
 }

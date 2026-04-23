@@ -1,7 +1,7 @@
 package org.automation.pages;
 
 import io.appium.java_client.android.AndroidDriver;
-import org.automation.base.BasePage;
+import org.automation.base.AndroidActions;
 import org.automation.locators.LogTextBoxLocators;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -10,7 +10,7 @@ import org.openqa.selenium.WebElement;
  * Page object for the LogTextBox screen.
  * The input field (id: text) serves as both the text input and the log display.
  */
-public class LogTextBoxPage extends BasePage {
+public class LogTextBoxPage extends AndroidActions {
 
     /**
      * Constructs a LogTextBoxPage with the given driver.
