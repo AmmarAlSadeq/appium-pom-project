@@ -1,6 +1,8 @@
 package org.automation.config;
 
 import java.time.Duration;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
@@ -9,21 +11,26 @@ import org.automation.utils.AppiumUtils;
 import org.automation.utils.ConfigReader;
 
 /**
- * Singleton factory for managing AndroidDriver lifecycle.
- * Uses ConfigReader for capabilities and creates a single driver instance.
+ * Singleton factory for managing AndroidDriver lifecycle with parallel support.
+ * Uses ThreadLocal drivers with per-thread sticky device assignment.
+ * Drivers persist across test classes within the same thread and are only
+ * destroyed at suite end to avoid port conflicts and session creation overhead.
  */
 public class DriverFactory {
 
+    private static final int DEVICE_COUNT = 2;
     private static DriverFactory instance;
-    private static AndroidDriver driver;
     private static AppiumDriverLocalService service;
+    private static final ConcurrentHashMap<Long, Integer> threadDeviceMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Long, AndroidDriver> allDrivers = new ConcurrentHashMap<>();
+    private static final AtomicInteger threadCounter = new AtomicInteger(0);
+    private static final ThreadLocal<AndroidDriver> driverThreadLocal = new ThreadLocal<>();
 
     private DriverFactory() {
     }
 
     /**
      * Returns the singleton instance of DriverFactory.
-     * Thread-safe double-checked locking.
      *
      * @return The singleton DriverFactory instance.
      */
@@ -54,53 +61,89 @@ public class DriverFactory {
     }
 
     /**
-     * Creates and returns the AndroidDriver instance.
-     * If driver already exists and is active, returns the same instance.
+     * Creates and returns a thread-local AndroidDriver for the assigned device.
+     * Each unique thread is permanently mapped to a device via ConcurrentHashMap.
      *
-     * @return The AndroidDriver instance.
+     * @return The AndroidDriver instance for the current thread.
      */
     public AndroidDriver getDriver() {
-        if (driver == null) {
-            createDriver();
+        if (driverThreadLocal.get() == null) {
+            long threadId = Thread.currentThread().getId();
+            int index = threadDeviceMap.computeIfAbsent(threadId,
+                    id -> threadCounter.getAndIncrement() % DEVICE_COUNT);
+            System.out.println("[Thread-" + threadId + "] Assigned to device" + (index + 1));
+            createDriver(index);
         }
-        return driver;
+        return driverThreadLocal.get();
     }
 
     /**
-     * Creates a new AndroidDriver with UiAutomator2Options from config.
+     * Creates a new AndroidDriver targeting the device at the given index.
+     *
+     * @param index The device index (0-based) from the device pool.
      */
-    private void createDriver() {
-        String androidDeviceName = ConfigReader.get("androidDeviceName");
+    private void createDriver(int index) {
+        String prefix = "device" + (index + 1) + ".";
+        String deviceName = ConfigReader.get(prefix + "deviceName");
+        String udid = ConfigReader.get(prefix + "udid");
+        int systemPort = Integer.parseInt(ConfigReader.get(prefix + "systemPort"));
         String appPackage = ConfigReader.get("appPackage");
         String appActivity = ConfigReader.get("appActivity");
         String apkFileName = ConfigReader.get("apkFileName");
         String apkPath = System.getProperty("user.dir") + "//src//main//java//org//automation//resources//" + apkFileName;
 
         UiAutomator2Options options = new UiAutomator2Options();
-        options.setDeviceName(androidDeviceName);
+        options.setDeviceName(deviceName);
+        options.setUdid(udid);
+        options.setSystemPort(systemPort);
         options.setAppPackage(appPackage);
         options.setAppActivity(appActivity);
         options.setApp(apkPath);
         options.setNoReset(false);
         options.setNewCommandTimeout(Duration.ofSeconds(300));
+        options.setCapability("appium:uiautomator2ServerLaunchTimeout", 60000);
+        options.setCapability("appium:adbExecTimeout", 60000);
 
-        String serverUrl = service.getUrl().toString();
-        System.out.println("Appium Server URL: " + serverUrl);
-        System.out.println("APK Path: " + apkPath);
+        System.out.println("[Thread-" + Thread.currentThread().getId() + "] Creating driver for " + deviceName + " (" + udid + ")");
 
-        driver = new AndroidDriver(service.getUrl(), options);
+        AndroidDriver driver = new AndroidDriver(service.getUrl(), options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(
                 Integer.parseInt(ConfigReader.get("defaultWaitTimeout"))));
+        driverThreadLocal.set(driver);
+        allDrivers.put(Thread.currentThread().getId(), driver);
     }
 
     /**
-     * Quits the AndroidDriver and removes the reference.
+     * Quits the AndroidDriver for the current thread with error handling.
+     * The thread keeps its device assignment for the next class.
      */
     public void quitDriver() {
+        AndroidDriver driver = driverThreadLocal.get();
         if (driver != null) {
-            driver.quit();
-            driver = null;
+            try {
+                driver.quit();
+            } catch (Exception e) {
+                System.out.println("[DriverFactory] Error quitting driver: " + e.getMessage());
+            }
+            driverThreadLocal.remove();
+            allDrivers.remove(Thread.currentThread().getId());
         }
+    }
+
+    /**
+     * Quits all active AndroidDriver instances across all threads.
+     * Called once at suite end to clean up resources.
+     */
+    public void quitAllDrivers() {
+        allDrivers.values().forEach(driver -> {
+            try {
+                driver.quit();
+            } catch (Exception e) {
+                System.out.println("[DriverFactory] Error quitting driver: " + e.getMessage());
+            }
+        });
+        allDrivers.clear();
+        driverThreadLocal.remove();
     }
 
     /**
@@ -111,5 +154,4 @@ public class DriverFactory {
             service.stop();
         }
     }
-
 }

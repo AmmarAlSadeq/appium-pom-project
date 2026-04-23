@@ -98,6 +98,21 @@ public class WaitHelper {
     }
 
     /**
+     * Waits for an element located by the given locator to become invisible.
+     * Uses By locator to avoid triggering implicit wait on findElement.
+     *
+     * @param locator The By locator of the element to wait to disappear.
+     * @return true if element becomes invisible or is not present.
+     */
+    public boolean waitUntilInvisibleByLocator(By locator) {
+        try {
+            return wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
+
+    /**
      * Waits for element to be visible using a By locator.
      *
      * @param locator The By locator to find the element.

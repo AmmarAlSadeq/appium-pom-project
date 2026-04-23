@@ -2,7 +2,7 @@ package org.automation.pages;
 
 import io.appium.java_client.android.AndroidDriver;
 import org.automation.locators.DragDropLocators;
-import org.automation.utils.AndroidActions;
+import org.automation.base.AndroidActions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 

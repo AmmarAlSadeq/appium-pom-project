@@ -1,66 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="ApiDemos Test Suite">
+<suite name="ApiDemos Parallel Test Suite" parallel="classes" thread-count="2">
     <listeners>
         <listener class-name="org.automation.testUtils.Listeners"/>
     </listeners>
 
-    <test name="Home Screen Tests">
+    <test name="All Tests - Parallel Execution">
         <classes>
             <class name="org.automation.tests.HomeTest"/>
-        </classes>
-    </test>
-
-    <test name="ScrollView Tests">
-        <classes>
             <class name="org.automation.tests.ScrollViewTest"/>
-        </classes>
-    </test>
-
-    <test name="Drag and Drop Tests">
-        <classes>
             <class name="org.automation.tests.DragDropTest"/>
-        </classes>
-    </test>
-
-    <test name="Expandable List Tests">
-        <classes>
             <class name="org.automation.tests.ExpandableListTest"/>
-        </classes>
-    </test>
-
-    <test name="Controls Tests">
-        <classes>
             <class name="org.automation.tests.ControlsTest"/>
-        </classes>
-    </test>
-
-    <test name="Alert Dialogs Tests">
-        <classes>
             <class name="org.automation.tests.AlertDialogsTest"/>
-        </classes>
-    </test>
-
-    <test name="LogTextBox Tests">
-        <classes>
             <class name="org.automation.tests.LogTextBoxTest"/>
-        </classes>
-    </test>
-
-    <test name="Lists Tests">
-        <classes>
             <class name="org.automation.tests.ListsTest"/>
-        </classes>
-    </test>
-
-    <test name="Progress Bar Tests">
-        <classes>
             <class name="org.automation.tests.ProgressBarTest"/>
-        </classes>
-    </test>
-
-    <test name="Horizontal Scroll Tests">
-        <classes>
             <class name="org.automation.tests.HorizontalScrollTest"/>
         </classes>
     </test>

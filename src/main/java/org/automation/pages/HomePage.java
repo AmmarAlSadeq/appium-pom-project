@@ -2,14 +2,14 @@ package org.automation.pages;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
-import org.automation.base.BasePage;
+import org.automation.base.AndroidActions;
 import org.automation.locators.HomeLocators;
 import org.openqa.selenium.WebElement;
 
 /**
  * Page object for the ApiDemos Home screen.
  */
-public class HomePage extends BasePage {
+public class HomePage extends AndroidActions {
 
     /**
      * Constructs a new HomePage instance.
