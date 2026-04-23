@@ -1,18 +1,8 @@
-# ApiDemos Appium POM Automation Framework
-
-## Framework Overview
-
-Appium + Java + TestNG mobile automation framework using a strict **three-layer Page Object Model** against the ApiDemos Android app. Locators, pages, and tests are fully separated — no `@AndroidFindBy`, no `PageFactory`, no inline selectors in pages.
-
-**Scope:** 10 automated test scenarios covering home screen navigation, scroll views, drag and drop, expandable lists, controls, alert dialogs, log text box, lists, progress bar, and horizontal swipe.
-
-**Target App:** [ApiDemos-debug.apk v6.0.6](https://github.com/appium/android-apidemos/releases/download/v6.0.6/ApiDemos-debug.apk) - Package: `io.appium.android.apis` | Activity: `io.appium.android.apis.ApiDemos`
-
----
+# Architecture — Appium POM Automation Framework
 
 ## Architecture — Three-Layer Page Object Model
 
-The framework enforces strict separation across three layers:
+The framework enforces strict separation across three layers. All naming follows **camelCase** convention.
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -25,7 +15,7 @@ The framework enforces strict separation across three layers:
 │                   PAGES LAYER                        │
 │  Private WebElement methods + public actions         │
 │  References locators from *Locators constants        │
-│  Extends BasePage for shared driver/wait logic       │
+│  Extends AndroidActions for shared logic             │
 └─────────────────────────────────────────────────────┘
                           │
                           ▼
@@ -36,20 +26,6 @@ The framework enforces strict separation across three layers:
 └─────────────────────────────────────────────────────┘
 ```
 
-### Inheritance Hierarchy
-
-```
-BasePage (base/)
-  ├── driver + waitHelper fields
-  ├── isElementDisplayed(), isChecked(), getElementText()
-  │
-  ├── AndroidActions extends BasePage (utils/)
-  │     ├── longPressAction(), dragAndDropAction()
-  │     └── 8 pages extend AndroidActions
-  │
-  └── 6 pages extend BasePage directly
-```
-
 ---
 
 ## Design Principles
@@ -58,126 +34,29 @@ BasePage (base/)
 |-----------|----------------|
 | **Encapsulation** | Page objects encapsulate UI structure; tests interact through methods only |
 | **Separation of Concerns** | Locators define selectors, pages define interactions, tests define assertions |
-| **Reusability** | BasePage, ScrollHelper, SwipeHelper shared across pages; AndroidActions provides gestures |
+| **Reusability** | AndroidActions provides shared element state + gestures; ScrollHelper, SwipeHelper, WaitHelper in utils |
 | **Maintainability** | Selector changes require editing only the locators class — single source of truth |
-| **DRY** | BasePage eliminates duplicated driver/waitHelper fields across all 14 page objects |
+| **DRY** | AndroidActions eliminates duplicated driver/waitHelper fields across all 14 page objects |
 
 ---
 
-## Project Structure
+## Driver Factory & Parallel Execution
+
+Singleton `DriverFactory` manages the complete driver lifecycle with ThreadLocal drivers for parallel execution.
+
+### Parallel Architecture
 
 ```
-appium-pom-project/
-├── .github/workflows/
-│   └── appium.yml                         # CI/CD pipeline
-├── docs/
-│   └── ARCHITECTURE.md                    # This file
-├── src/
-│   ├── main/java/org/automation/
-│   │   ├── base/                          # SHARED BASE LOGIC
-│   │   │   └── BasePage.java             # driver, waitHelper, common element methods
-│   │   │
-│   │   ├── locators/                      # LOCATORS LAYER - selector strings only
-│   │   │   ├── HomeLocators.java
-│   │   │   ├── ViewsLocators.java
-│   │   │   ├── LayoutsLocators.java
-│   │   │   ├── ScrollViewLocators.java
-│   │   │   ├── DragDropLocators.java
-│   │   │   ├── ExpandableListLocators.java
-│   │   │   ├── ControlsLocators.java
-│   │   │   ├── AlertDialogsLocators.java
-│   │   │   ├── AppLocators.java
-│   │   │   ├── TextLocators.java
-│   │   │   ├── LogTextBoxLocators.java
-│   │   │   ├── ListsLocators.java
-│   │   │   ├── ProgressBarLocators.java
-│   │   │   └── HorizontalScrollLocators.java
-│   │   │
-│   │   ├── pages/                         # PAGES LAYER - methods and interactions
-│   │   │   ├── HomePage.java              # TC-001: categories, navigation
-│   │   │   ├── ViewsPage.java             # Views sub-menu navigation
-│   │   │   ├── LayoutsPage.java           # Layouts sub-menu
-│   │   │   ├── ScrollViewPage.java        # TC-002: scroll to bottom and back
-│   │   │   ├── DragDropPage.java          # TC-003: drag dot and verify result
-│   │   │   ├── ExpandableListPage.java    # TC-004: expand/collapse groups
-│   │   │   ├── ControlsPage.java          # TC-005: button, checkbox, radio, toggle
-│   │   │   ├── AlertDialogsPage.java      # TC-006: OK Cancel, List, Single choice
-│   │   │   ├── AppPage.java               # App sub-menu navigation
-│   │   │   ├── TextPage.java              # Text sub-menu navigation
-│   │   │   ├── LogTextBoxPage.java        # TC-007: type text and verify log
-│   │   │   ├── ListsPage.java             # TC-008: dynamic scroll until item found
-│   │   │   ├── ProgressBarPage.java       # TC-009: increment/decrement progress
-│   │   │   └── HorizontalScrollPage.java  # TC-010: horizontal swipe verification
-│   │   │
-│   │   ├── config/                        # Driver configuration
-│   │   │   └── DriverFactory.java         # Singleton driver factory
-│   │   │
-│   │   ├── utils/                         # Utility classes
-│   │   │   ├── AppiumUtils.java           # Server start/stop, ExtentReports, JSON reader
-│   │   │   ├── AndroidActions.java        # Gestures: long press, drag, swipe (extends BasePage)
-│   │   │   ├── WaitHelper.java            # Explicit waits (WebDriverWait wrapper)
-│   │   │   ├── ScrollHelper.java          # UiScrollable + mobile:scroll actions
-│   │   │   └── SwipeHelper.java           # W3C PointerInput swipes
-│   │   │
-│   │   └── resources/
-│   │       ├── config.properties          # Appium & device configuration
-│   │       └── ApiDemos-debug.apk         # Target APK
-│   │
-│   └── test/java/org/automation/
-│       ├── tests/                         # TEST LAYER - test logic and assertions
-│       │   ├── HomeTest.java              # TC-001
-│       │   ├── ScrollViewTest.java        # TC-002
-│       │   ├── DragDropTest.java          # TC-003
-│       │   ├── ExpandableListTest.java    # TC-004
-│       │   ├── ControlsTest.java          # TC-005
-│       │   ├── AlertDialogsTest.java      # TC-006
-│       │   ├── LogTextBoxTest.java        # TC-007
-│       │   ├── ListsTest.java             # TC-008
-│       │   ├── ProgressBarTest.java       # TC-009
-│       │   └── HorizontalScrollTest.java  # TC-010
-│       │
-│       ├── testData/                      # External test data files
-│       │   └── messages.json              # Expected messages for assertions
-│       │
-│       └── testUtils/                     # Test infrastructure
-│           ├── AndroidBaseClass.java      # Suite/class lifecycle hooks
-│           ├── Listeners.java             # ExtentReports + screenshot on failure
-│           └── RetryAnalyzer.java         # Auto-retry (configurable via config.properties)
-│
-├── testng.xml                             # TestNG suite configuration
-├── pom.xml                                # Maven dependencies and plugins
-├── .gitignore                             # Excludes /target, *.apk, .env, reports
-└── README.md                              # Project documentation
+@BeforeSuite  → startService()                          # Appium server starts once
+@BeforeClass  → getDriver() → thread-to-device mapping   # 1 driver per thread, reused across classes
+@BeforeMethod → resetApp()                               # App reset before each test
+@AfterSuite   → quitAllDrivers() + stopService()         # Cleanup once at suite end
 ```
 
----
-
-## Driver Factory & Configuration
-
-Singleton `DriverFactory` manages the complete driver lifecycle. All capabilities externalized in `config.properties`.
-
-### Configuration
-
-```properties
-# config.properties
-ipAddress = 127.0.0.1
-port = 4723
-androidDeviceName = Pixel 5 API 27
-appPackage = io.appium.android.apis
-appActivity = io.appium.android.apis.ApiDemos
-apkFileName = ApiDemos-debug.apk
-defaultWaitTimeout = 15
-retryCount = 2
-```
-
-### Driver Lifecycle
-
-```
-@BeforeSuite  → DriverFactory.startService()        # Appium server starts once
-@BeforeClass  → DriverFactory.getDriver() + helpers  # Driver per test class
-@AfterClass   → resetAppToHome()                     # App reset between classes
-@AfterSuite   → DriverFactory.quitDriver() + stopService()  # Cleanup once
-```
+- **ThreadLocal drivers:** Each thread gets its own `AndroidDriver` instance
+- **Sticky device mapping:** `ConcurrentHashMap<Long, Integer>` permanently maps each thread to a device
+- **Driver reuse:** Driver created once per thread and reused across all test classes (not per-class)
+- **Suite-level cleanup:** `quitAllDrivers()` quits all active drivers at `@AfterSuite`
 
 ---
 
@@ -188,41 +67,54 @@ retryCount = 2
 | Hook | Annotation | Purpose |
 |------|-----------|---------|
 | Start server | `@BeforeSuite` | Appium server starts once for entire suite |
-| Create driver | `@BeforeClass` | Driver + WaitHelper/ScrollHelper/SwipeHelper per class |
-| Reset app | `@AfterClass` | Resets app to home screen between classes |
-| Teardown | `@AfterSuite` | Quit driver + stop server once at suite end |
+| Create driver | `@BeforeClass` | Thread-local driver + WaitHelper/ScrollHelper/SwipeHelper |
+| Reset app | `@BeforeMethod` | Terminates and reactivates app before each test |
+| Teardown | `@AfterSuite` | Quit all drivers + stop server once at suite end |
 
 All test classes extend `AndroidBaseClass` and inherit `driver`, `waitHelper`, `scrollHelper`, `swipeHelper`.
 
 ---
 
-## BasePage
+## AndroidActions (Base Class)
 
-`BasePage` in `org.automation.base` provides shared logic for all page objects:
+`AndroidActions` in `org.automation.base` is the single base class for all page objects:
 
 | Method | Description |
 |--------|-------------|
-| `waitForElement(element)` | Waits for element visibility via WaitHelper |
 | `isElementDisplayed(element)` | Safe visibility check with try/catch |
 | `isElementNotDisplayed(element)` | Safe non-visibility check (for dismiss assertions) |
 | `isChecked(element)` | Gets checked state via `getAttribute("checked")` |
 | `getElementText(element)` | Safe text retrieval with empty string fallback |
+| `longPressAction(element)` | `mobile: longClickGesture` via JavascriptExecutor |
+| `dragAndDropAction(element, x, y)` | `mobile: dragGesture` via JavascriptExecutor |
+
+All page objects extend `AndroidActions` and inherit `driver`, `waitHelper`, and all shared methods.
 
 ---
 
 ## Utility Classes
 
 ### WaitHelper
-WebDriverWait wrapper — timeout reads from `config.properties` (`defaultWaitTimeout`).
+WebDriverWait wrapper — timeout reads from `config.properties` (`defaultWaitTimeout`). Includes `waitForVisibility`, `waitForClickable`, `waitForTextPresent`, `waitUntilInvisible`, `waitUntilInvisibleByLocator`, `waitForVisibilityByLocator`.
 
 ### ScrollHelper
-UiScrollable text-based + mobile:scroll gesture-based scrolling.
+UiScrollable text-based + mobile:scroll gesture-based scrolling. Includes `scrollToTextWithRetry()` for dynamic scroll loops.
 
 ### SwipeHelper
-W3C PointerInput-based swiping with configurable duration and offset.
+W3C PointerInput-based swiping with configurable direction, duration, and offset. No deprecated TouchAction.
 
-### AndroidActions
-Gesture methods inherited by page objects: `longPressAction()`, `dragAndDropAction()`, `swipeToElementAction()`.
+---
+
+## Data-Driven Testing
+
+Test data is externalized in JSON files under `src/test/java/org/automation/testData/`:
+
+| File | Used By | Purpose |
+|------|---------|---------|
+| `logtextbox_testdata.json` | TC-007 LogTextBoxTest | Input strings and expected log output |
+| `dialogs_testdata.json` | TC-006 AlertDialogsTest | Expected list dialog selection message |
+
+Data is loaded via `AppiumUtils.getTestData()` using Jackson.
 
 ---
 
@@ -230,49 +122,16 @@ Gesture methods inherited by page objects: `longPressAction()`, `dragAndDropActi
 
 **ExtentReports 5.1.1** with TestNG `ITestListener`:
 
-- On failure: screenshot saved to `src/reports/screenshots/` and embedded in report
-- Report output: `src/reports/extent-report.html`
-- Retry: configurable via `retryCount` in `config.properties`
+| Event | Behavior |
+|-------|----------|
+| Test starts | Creates ExtentTest entry with description |
+| Test passes | Logs PASS status |
+| Test fails | Logs FAIL + throwable + screenshot (embedded in report) |
+| Test skipped | Logs SKIP + skip reason from throwable |
+| Suite ends | Flushes report to `src/reports/extent-report.html` |
 
----
+Screenshot capture is protected against dead sessions — gracefully skipped if Appium session is no longer active.
 
-## Test Scenarios
+### Retry Mechanism
+`RetryAnalyzer` auto-retries failed tests up to `retryCount` (from `config.properties`). Wired per test via `@Test(retryAnalyzer = RetryAnalyzer.class)`.
 
-| TC ID | Test Name | Navigation Path | Key Assertions |
-|-------|-----------|-----------------|----------------|
-| TC-001 | Home Screen Verification | Home | 11 categories present, Views tappable |
-| TC-002 | ScrollView Bottom/Top | Home -> Views -> Layouts -> ScrollView -> 2. Long | Scroll bottom/top, first element visibility |
-| TC-003 | Drag and Drop | Home -> Views -> Drag and Drop | Drag dot1 to dot2, assert "Dropped!" |
-| TC-004 | Expandable Lists | Home -> Views -> Expandable Lists -> Custom Adapter | Expand/collapse groups, child visibility |
-| TC-005 | Controls Light Theme | Home -> Views -> Controls -> 1. Light Theme | Button, checkbox, radio, toggle states |
-| TC-006 | Alert Dialogs | Home -> App -> Alert Dialogs | OK Cancel, List (data-driven), Single choice |
-| TC-007 | LogTextBox | Home -> Text -> LogTextBox | Type text, tap Add, verify log appends |
-| TC-008 | Lists Dynamic Scroll | Home -> Views -> Lists -> 04. ListAdapter | UiScrollable scroll until target found |
-| TC-009 | Progress Bar | Home -> Views -> Progress Bar -> 1. Incremental | Increase/decrease, value bounds 0-100 |
-| TC-010 | Horizontal Swipe | Home -> Views -> Layouts -> HorizontalScrollView | Screenshot diff: swipe left changes, swipe right restores |
-
----
-
-## Framework Stack
-
-| Component         | Technology          | Version  |
-|-------------------|---------------------|----------|
-| Language          | Java                | 11       |
-| Build Tool        | Maven               | 3.6+     |
-| Test Framework    | TestNG              | 7.7.0    |
-| Mobile Automation | Appium Java Client  | 9.4.0    |
-| Appium Server     | Appium              | 2.0      |
-| Web Driver        | Selenium            | 4.28.1   |
-| Reporting         | ExtentReports       | 5.1.1    |
-| JSON Parsing      | Jackson             | 2.15.3   |
-| CI Platform       | GitHub Actions      | -        |
-
----
-
-## Adding a New Test
-
-1. Create `XxxLocators.java` in `locators/` with `public static final String` constants
-2. Create `XxxPage.java` in `pages/` extending `BasePage` (or `AndroidActions` for gestures)
-3. Create `XxxTest.java` in `tests/` extending `AndroidBaseClass`
-4. Add test class to `testng.xml`
-5. Update this ARCHITECTURE.md and README.md
