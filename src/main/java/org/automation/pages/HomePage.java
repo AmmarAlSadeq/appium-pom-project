@@ -33,32 +33,22 @@ public class HomePage extends AndroidActions {
     }
 
     /**
-     * Checks if a specific category is displayed using accessibility ID.
-     *
-     * @param accessibilityId The accessibility ID of the category.
-     * @return true if the category is visible, false otherwise.
-     */
-    public boolean isCategoryDisplayed(String accessibilityId) {
-        return isElementDisplayed(driver.findElement(AppiumBy.accessibilityId(accessibilityId)));
-    }
-
-    /**
      * Verifies all 11 expected categories are displayed.
      *
      * @return true if all categories are visible.
      */
     public boolean areAllCategoriesDisplayed() {
-        return isCategoryDisplayed(HomeLocators.ACCESSIBILITY)
-                && isCategoryDisplayed(HomeLocators.ANIMATION)
-                && isCategoryDisplayed(HomeLocators.APP)
-                && isCategoryDisplayed(HomeLocators.CONTENT)
-                && isCategoryDisplayed(HomeLocators.GRAPHICS)
-                && isCategoryDisplayed(HomeLocators.MEDIA)
-                && isCategoryDisplayed(HomeLocators.NFC)
-                && isCategoryDisplayed(HomeLocators.OS)
-                && isCategoryDisplayed(HomeLocators.PREFERENCE)
-                && isCategoryDisplayed(HomeLocators.TEXT)
-                && isCategoryDisplayed(HomeLocators.VIEWS);
+        return isElementDisplayed(driver.findElement(AppiumBy.accessibilityId(HomeLocators.ACCESSIBILITY)))
+                && isElementDisplayed(driver.findElement(AppiumBy.accessibilityId(HomeLocators.ANIMATION)))
+                && isElementDisplayed(driver.findElement(AppiumBy.accessibilityId(HomeLocators.APP)))
+                && isElementDisplayed(driver.findElement(AppiumBy.accessibilityId(HomeLocators.CONTENT)))
+                && isElementDisplayed(driver.findElement(AppiumBy.accessibilityId(HomeLocators.GRAPHICS)))
+                && isElementDisplayed(driver.findElement(AppiumBy.accessibilityId(HomeLocators.MEDIA)))
+                && isElementDisplayed(driver.findElement(AppiumBy.accessibilityId(HomeLocators.NFC)))
+                && isElementDisplayed(driver.findElement(AppiumBy.accessibilityId(HomeLocators.OS)))
+                && isElementDisplayed(driver.findElement(AppiumBy.accessibilityId(HomeLocators.PREFERENCE)))
+                && isElementDisplayed(driver.findElement(AppiumBy.accessibilityId(HomeLocators.TEXT)))
+                && isElementDisplayed(driver.findElement(AppiumBy.accessibilityId(HomeLocators.VIEWS)));
     }
 
     /**

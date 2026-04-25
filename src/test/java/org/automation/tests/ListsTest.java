@@ -27,5 +27,8 @@ public class ListsTest extends AndroidBaseClass {
         listsPage.openListAdapter();
         Assert.assertTrue(listsPage.scrollUntilTargetItem(),
                 "Target item should be found after dynamic scrolling");
+
+        // Scrolled using UiScrollable and targeted "King Lear" as the target item
+        // instead of "Gingerbread" which does not exist in the ApiDemos list
     }
 }
