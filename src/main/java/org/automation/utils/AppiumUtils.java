@@ -86,7 +86,7 @@ public abstract class AppiumUtils {
 
         extentReport = new ExtentReports();
         extentReport.attachReporter(reporter);
-        extentReport.setSystemInfo("Senior QA Engineer", "Ammar AlSadeq");
+        extentReport.setSystemInfo("QA Automation Lead", "Ammar AlSadeq");
 
         return extentReport;
     }
