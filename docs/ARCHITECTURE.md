@@ -95,10 +95,10 @@ All page objects extend `AndroidActions` and inherit `driver`, `waitHelper`, and
 ## Utility Classes
 
 ### WaitHelper
-WebDriverWait wrapper — timeout reads from `config.properties` (`defaultWaitTimeout`). Includes `waitForVisibility`, `waitForClickable`, `waitForTextPresent`, `waitUntilInvisible`, `waitUntilInvisibleByLocator`, `waitForVisibilityByLocator`.
+WebDriverWait wrapper — timeout reads from `config.properties` (`defaultWaitTimeout`). Includes `waitForVisibility`, `waitForClickable`, `waitForTextPresent`, `waitUntilInvisibleByLocator`.
 
 ### ScrollHelper
-UiScrollable text-based + mobile:scroll gesture-based scrolling. Includes `scrollToTextWithRetry()` for dynamic scroll loops.
+UiScrollable text-based + mobile:scroll gesture-based scrolling.
 
 ### SwipeHelper
 W3C PointerInput-based swiping with configurable direction, duration, and offset. No deprecated TouchAction.
@@ -111,10 +111,10 @@ Test data is externalized in JSON files under `src/test/java/org/automation/test
 
 | File | Used By | Purpose |
 |------|---------|---------|
-| `logtextbox_testdata.json` | TC-007 LogTextBoxTest | Input strings and expected log output |
-| `dialogs_testdata.json` | TC-006 AlertDialogsTest | Expected list dialog selection message |
+| `logTextBoxTestData.json` | TC-007 LogTextBoxTest | Input strings and expected log output |
+| `alertDialogsTestData.json` | TC-006 AlertDialogsTest | Expected list dialog selection message |
 
-Data is loaded via `AppiumUtils.getTestData()` using Jackson.
+Data is loaded via `TestDataReader.getData()` using Jackson.
 
 ---
 

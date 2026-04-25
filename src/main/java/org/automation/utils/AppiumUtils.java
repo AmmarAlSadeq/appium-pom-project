@@ -1,42 +1,20 @@
 package org.automation.utils;
 
 import java.io.File;
-import java.io.IOException;
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.List;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
-import org.apache.commons.io.FileUtils;
 
 /**
  * Utility class for common Appium-related operations.
- * This class provides methods for starting the Appium server, reading JSON data,
- * formatting amounts, generating ExtentReports, and more.
+ * This class provides methods for starting the Appium server and generating ExtentReports.
  */
 public abstract class AppiumUtils {
-    public AppiumDriverLocalService service; // Appium server instance
-    public static ExtentReports extentReport; // ExtentReports instance for reporting
-
-    /**
-     * Reads JSON data from a file and converts it into a list of HashMaps.
-     *
-     * @param jsonPath The path to the JSON file.
-     * @return A list of HashMaps containing the JSON data.
-     * @throws IOException If the file cannot be read.
-     */
-    public List<HashMap<String, String>> getJsonData(String jsonPath) throws IOException {
-        String jsonContent = FileUtils.readFileToString(new File(jsonPath));
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<HashMap<String, String>> data = objectMapper.readValue(jsonContent,
-                new TypeReference<List<HashMap<String, String>>>() {});
-        return data;
-    }
+    public AppiumDriverLocalService service;
+    public static ExtentReports extentReport;
 
     /**
      * Starts the Appium server with the specified IP address and port.

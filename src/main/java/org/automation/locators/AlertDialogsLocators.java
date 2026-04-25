@@ -13,4 +13,5 @@ public class AlertDialogsLocators {
     public static final String DIALOG_TITLE = "android:id/alertTitle";
     public static final String COMMAND_ONE = "Command one";
     public static final String SATELLITE = "Satellite";
+    public static final String LIST_DIALOG_MESSAGE = "android:id/message";
 }

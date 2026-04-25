@@ -3,7 +3,6 @@ package org.automation.utils;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
 
 /**
  * Reusable scroll utility with configurable direction, duration, and max swipes.
@@ -12,25 +11,14 @@ import org.openqa.selenium.WebElement;
 public class ScrollHelper {
 
     private final AndroidDriver driver;
-    private int maxSwipes = 10;
 
     /**
-     * Constructs a ScrollHelper with default max swipes.
+     * Constructs a ScrollHelper.
      *
      * @param driver The AndroidDriver instance.
      */
     public ScrollHelper(AndroidDriver driver) {
         this.driver = driver;
-    }
-
-    /**
-     * Sets the maximum number of scroll retry attempts.
-     *
-     * @param max The maximum number of swipes.
-     * @throws IllegalArgumentException if max is negative.
-     */
-    public void setMaxSwipes(int max) {
-        this.maxSwipes = max;
     }
 
     /**
@@ -110,25 +98,4 @@ public class ScrollHelper {
         }
     }
 
-    /**
-     * Dynamically scrolls down until an element with the given text is found.
-     *
-     * @param text      The text to search for.
-     * @param maxScroll Maximum number of scroll attempts.
-     * @return true if element found within max scroll attempts.
-     */
-    public boolean scrollToTextWithRetry(String text, int maxScroll) {
-        for (int i = 0; i < maxScroll; i++) {
-            try {
-                WebElement element = driver.findElement(AppiumBy.androidUIAutomator(
-                        "new UiSelector().textContains(\"" + text + "\")"));
-                if (element.isDisplayed()) {
-                    return true;
-                }
-            } catch (Exception e) {
-                scrollDown();
-            }
-        }
-        return false;
-    }
 }
