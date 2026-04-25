@@ -121,4 +121,13 @@ public class AlertDialogsPage extends AndroidActions {
     public void dismissDialog() {
         driver.pressKey(new KeyEvent(AndroidKey.BACK));
     }
+
+    /**
+     * Gets the selection result message displayed after choosing from the list dialog.
+     *
+     * @return The result message text.
+     */
+    public String getListDialogResult() {
+        return driver.findElement(By.id(AlertDialogsLocators.LIST_DIALOG_MESSAGE)).getText();
+    }
 }

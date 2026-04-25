@@ -44,13 +44,6 @@ public class SwipeHelper {
     }
 
     /**
-     * Swipes left with default duration and offset.
-     */
-    public void swipeLeft() {
-        swipeLeft(DEFAULT_DURATION_MS, DEFAULT_OFFSET);
-    }
-
-    /**
      * Swipes right across the screen.
      *
      * @param durationMs Duration of the swipe in milliseconds.
@@ -65,13 +58,6 @@ public class SwipeHelper {
         int y = height / 2;
 
         performSwipe(startX, y, endX, y, durationMs);
-    }
-
-    /**
-     * Swipes right with default duration and offset.
-     */
-    public void swipeRight() {
-        swipeRight(DEFAULT_DURATION_MS, DEFAULT_OFFSET);
     }
 
     /**
@@ -92,13 +78,6 @@ public class SwipeHelper {
     }
 
     /**
-     * Swipes up with default duration and offset.
-     */
-    public void swipeUp() {
-        swipeUp(DEFAULT_DURATION_MS, DEFAULT_OFFSET);
-    }
-
-    /**
      * Swipes down on the screen.
      *
      * @param durationMs Duration of the swipe in milliseconds.
@@ -113,13 +92,6 @@ public class SwipeHelper {
         int x = width / 2;
 
         performSwipe(x, startY, x, endY, durationMs);
-    }
-
-    /**
-     * Swipes down with default duration and offset.
-     */
-    public void swipeDown() {
-        swipeDown(DEFAULT_DURATION_MS, DEFAULT_OFFSET);
     }
 
     /**

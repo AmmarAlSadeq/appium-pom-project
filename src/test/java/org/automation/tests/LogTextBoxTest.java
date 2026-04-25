@@ -16,7 +16,7 @@ import org.testng.annotations.Test;
  */
 public class LogTextBoxTest extends AndroidBaseClass {
 
-    private static final String DATA_FILE = "src/test/java/org/automation/testData/logtextbox_testdata.json";
+    private static final String DATA_FILE = "src/test/java/org/automation/testData/logTextBoxTestData.json";
 
     @Test(description = "[TC-007] Type text entries and verify log appends both strings",
             retryAnalyzer = RetryAnalyzer.class)

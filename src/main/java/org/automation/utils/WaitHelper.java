@@ -84,20 +84,6 @@ public class WaitHelper {
     }
 
     /**
-     * Waits for an element to become invisible.
-     *
-     * @param element The WebElement to wait to disappear.
-     * @return true if element becomes invisible.
-     */
-    public boolean waitUntilInvisible(WebElement element) {
-        try {
-            return wait.until(ExpectedConditions.invisibilityOf(element));
-        } catch (TimeoutException e) {
-            return false;
-        }
-    }
-
-    /**
      * Waits for an element located by the given locator to become invisible.
      * Uses By locator to avoid triggering implicit wait on findElement.
      *
@@ -112,18 +98,4 @@ public class WaitHelper {
         }
     }
 
-    /**
-     * Waits for element to be visible using a By locator.
-     *
-     * @param locator The By locator to find the element.
-     * @return The visible WebElement.
-     * @throws TimeoutException if element is not visible within the timeout.
-     */
-    public WebElement waitForVisibilityByLocator(By locator) {
-        try {
-            return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-        } catch (TimeoutException e) {
-            throw new TimeoutException("Element not visible by locator after " + timeoutSeconds + " seconds: " + locator.toString(), e);
-        }
-    }
 }

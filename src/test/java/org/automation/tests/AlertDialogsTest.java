@@ -5,6 +5,7 @@ import org.automation.pages.AppPage;
 import org.automation.pages.HomePage;
 import org.automation.testUtils.AndroidBaseClass;
 import org.automation.testUtils.RetryAnalyzer;
+import org.automation.testUtils.TestDataReader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -14,6 +15,8 @@ import org.testng.annotations.Test;
  * Navigation: Home -> App -> Alert Dialogs
  */
 public class AlertDialogsTest extends AndroidBaseClass {
+
+    private static final String DATA_FILE = "src/test/java/org/automation/testData/alertDialogsTestData.json";
 
     @Test(description = "[TC-006] Trigger, interact and dismiss three dialog types",
             retryAnalyzer = RetryAnalyzer.class)
@@ -34,6 +37,9 @@ public class AlertDialogsTest extends AndroidBaseClass {
         Assert.assertTrue(alertDialogsPage.isDialogDisplayed(),
                 "List dialog should be displayed");
         alertDialogsPage.selectCommandOne();
+        Assert.assertEquals(alertDialogsPage.getListDialogResult(),
+                TestDataReader.getData(DATA_FILE, "listDialogSelection"),
+                "List dialog result should confirm Command one was selected");
         alertDialogsPage.dismissDialog();
         Assert.assertTrue(alertDialogsPage.isDialogDismissed(),
                 "List dialog should be dismissed after pressing back");

@@ -233,7 +233,7 @@ appium-pom-project/
 │   │   │   └── HorizontalScrollPage.java       # TC-010: horizontal swipe verification
 │   │   │
 │   │   ├── utils/                              # Utility classes
-│   │   │   ├── AppiumUtils.java                # Server start/stop, ExtentReports, JSON reader
+│   │   │   ├── AppiumUtils.java                # Server start/stop, ExtentReports
 │   │   │   ├── ConfigReader.java               # config.properties reader
 │   │   │   ├── WaitHelper.java                 # Explicit waits (WebDriverWait wrapper)
 │   │   │   ├── ScrollHelper.java               # UiScrollable + mobile:scroll actions
@@ -256,8 +256,8 @@ appium-pom-project/
 │       │   └── HorizontalScrollTest.java       # TC-010
 │       │
 │       ├── testData/                           # External test data files (JSON)
-│       │   ├── logtextbox_testdata.json        # TC-007: input text and expected log output
-│       │   └── dialogs_testdata.json           # TC-006: expected dialog selection message
+│       │   ├── logTextBoxTestData.json         # TC-007: input text and expected log output
+│       │   └── alertDialogsTestData.json       # TC-006: expected dialog selection message
 │       │
 │       └── testUtils/                          # Test infrastructure
 │           ├── AndroidBaseClass.java           # Suite/class/method lifecycle hooks
@@ -280,11 +280,11 @@ appium-pom-project/
 | TC-002 | ScrollView Bottom/Top      | Scroll to bottom, verify last element; scroll to top, verify first   | Home -> Views -> Layouts -> ScrollView -> 2. Long    |
 | TC-003 | Drag and Drop              | Long-press drag dot to target, verify EditText result updates        | Home -> Views -> Drag and Drop                       |
 | TC-004 | Expandable Lists           | Expand/collapse groups, verify children appear/disappear             | Home -> Views -> Expandable Lists -> Custom Adapter  |
-| TC-005 | Controls Light Theme       | Interact with button, checkbox, radio, toggle, seekbar               | Home -> Views -> Controls -> 1. Light Theme          |
+| TC-005 | Controls Light Theme       | Interact with button, checkbox, radio, toggle                        | Home -> Views -> Controls -> 1. Light Theme          |
 | TC-006 | Alert Dialogs              | Dismiss OK Cancel, List (data-driven), Single choice dialogs         | Home -> App -> Alert Dialogs                         |
 | TC-007 | LogTextBox                 | Type text entries, tap Add, verify log appends both entries (JSON)    | Home -> Text -> LogTextBox                           |
-| TC-008 | Lists Dynamic Scroll       | Dynamic UiScrollable scroll until "Gingerbread" found, tap, verify   | Home -> Views -> Lists -> 04. ListAdapter            |
-| TC-009 | Progress Bar Incremental   | Increase/decrease progress bar 5 times / 3 times, verify bounds      | Home -> Views -> Progress Bar -> 1. Incremental      |
+| TC-008 | Lists Dynamic Scroll       | Dynamic UiScrollable scroll until "King Lear" found                   | Home -> Views -> Lists -> 04. ListAdapter            |
+| TC-009 | Progress Bar Incremental   | Increase/decrease progress bar and verify exact values                | Home -> Views -> Progress Bar -> 1. Incremental      |
 | TC-010 | E2E Horizontal Swipe       | Full 4-screen navigation flow with horizontal swipe verification     | Home -> Views -> Layouts -> HorizontalScrollView     |
 
 ---
