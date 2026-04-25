@@ -64,6 +64,8 @@ jobs:
           script: |
             mkdir -p /home/runner/.npm-global/lib/node_modules/appium/build/lib/
             ln -s $(which appium) /home/runner/.npm-global/lib/node_modules/appium/build/lib/main.js
+            sed -i 's/deviceCount = 2/deviceCount = 1/' src/main/java/org/automation/resources/config.properties
+            sed -i 's/thread-count="2"/thread-count="1"/' testng.xml
             appium --address 127.0.0.1 --port 4723 &
             APPIUM_PID=$!
             echo "Appium PID: $APPIUM_PID"
