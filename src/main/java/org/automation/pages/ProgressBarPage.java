@@ -49,45 +49,12 @@ public class ProgressBarPage extends AndroidActions {
     }
 
     /**
-     * Taps the Increase by 10% button.
-     */
-    public void tapIncrease() {
-        increaseButton().click();
-    }
-
-    /**
-     * Taps the Decrease by 10% button.
-     */
-    public void tapDecrease() {
-        decreaseButton().click();
-    }
-
-    /**
      * Gets the current progress value as a double.
      *
      * @return The current progress value (0.0-100.0).
      */
     public double getProgressValue() {
         return Double.parseDouble(progressValueElement().getText().trim());
-    }
-
-    /**
-     * Checks if the progress bar is displayed.
-     *
-     * @return true if the progress bar is visible.
-     */
-    public boolean isProgressBarDisplayed() {
-        return isElementDisplayed(progressBar());
-    }
-
-    /**
-     * Checks if the current progress value is within valid bounds (0-100).
-     *
-     * @return true if progress is between 0 and 100 inclusive.
-     */
-    public boolean isProgressWithinBounds() {
-        double value = getProgressValue();
-        return value >= 0 && value <= 100;
     }
 
     /**

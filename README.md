@@ -4,7 +4,7 @@
 
 ![Build Status](https://github.com/AmmarAlSadeq/appium-pom-project/actions/workflows/appium.yml/badge.svg)
 ![Java 11](https://img.shields.io/badge/Java-11-blue.svg)
-![Appium 2.0](https://img.shields.io/badge/Appium-2.0-green.svg)
+![Appium 3.0](https://img.shields.io/badge/Appium-3.0-green.svg)
 ![TestNG](https://img.shields.io/badge/TestNG-7.7.0-orange.svg)
 
 ---
@@ -24,7 +24,7 @@ Enterprise-grade mobile UI automation framework for the **ApiDemos** Android app
 |-------------------|---------------------|----------|
 | Language          | Java                | 11       |
 | Mobile Automation | Appium Java Client  | 9.4.0    |
-| Appium Server     | Appium              | 2.0      |
+| Appium Server     | Appium              | 3.0      |
 | Web Driver        | Selenium            | 4.28.1   |
 | Test Framework    | TestNG              | 7.7.0    |
 | Build Tool        | Maven               | 3.6+     |
@@ -41,14 +41,14 @@ Enterprise-grade mobile UI automation framework for the **ApiDemos** Android app
 | JDK                 | 11      | `java -version`                                             |
 | Maven               | 3.6+    | `mvn -version`                                              |
 | Node.js             | 18+     | `node -v`                                                   |
-| Appium Server       | 2.0+    | `npm install -g appium@2.0` then `appium -v`               |
+| Appium Server       | 2.0+    | `npm install -g appium@3` then `appium -v`               |
 | UiAutomator2 Driver | Latest  | `appium driver install uiautomator2` then `appium driver list` |
 | Android SDK         | API 27+ | `echo $ANDROID_HOME` (or `%ANDROID_HOME%` on Windows)       |
 | Android Emulator(s) | API 27+ | `adb devices` — at least 1 running (2 for parallel)         |
 
 **First-time Appium setup:**
 ```bash
-npm install -g appium@2.0
+npm install -g appium@3
 appium driver install uiautomator2
 ```
 

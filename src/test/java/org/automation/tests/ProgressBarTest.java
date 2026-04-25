@@ -27,14 +27,10 @@ public class ProgressBarTest extends AndroidBaseClass {
         progressBarPage.openIncremental();
         double initialValue = progressBarPage.getProgressValue();
         double valueAfterIncrease = progressBarPage.increaseProgress(5);
-        Assert.assertTrue(valueAfterIncrease >= initialValue,
-                "Progress should increase after tapping Increase 5 times");
-        Assert.assertTrue(progressBarPage.isProgressWithinBounds(),
-                "Progress should not exceed 100% after increase");
+        Assert.assertEquals(valueAfterIncrease, initialValue + 5,
+                "Progress should be initial + 5 after tapping Increase 5 times");
         double valueAfterDecrease = progressBarPage.decreaseProgress(3);
-        Assert.assertTrue(valueAfterDecrease <= valueAfterIncrease,
-                "Progress should decrease after tapping Decrease 3 times");
-        Assert.assertTrue(progressBarPage.isProgressWithinBounds(),
-                "Progress should not go below 0% after decrease");
+        Assert.assertEquals(valueAfterDecrease, valueAfterIncrease - 3,
+                "Progress should be valueAfterIncrease - 3 after tapping Decrease 3 times");
     }
 }
