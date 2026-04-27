@@ -1,12 +1,12 @@
-package org.automation.utils;
+package org.automation.config;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
 /**
- * Utility class for reading configuration properties.
- * Loads config.properties once and provides static access to all key-value pairs.
+ * Configuration provider that loads config.properties once at class-load time
+ * and exposes key-value pairs via static access.
  */
 public class ConfigReader {
 
@@ -29,7 +29,7 @@ public class ConfigReader {
      * @param key The property key.
      * @return The property value.
      */
-    public static String get(String key) {
+    public static String getProperty(String key) {
         return properties.getProperty(key);
     }
 }

@@ -1,6 +1,6 @@
 package org.automation.testUtils;
 
-import org.automation.utils.ConfigReader;
+import org.automation.config.ConfigReader;
 import org.testng.IRetryAnalyzer;
 import org.testng.ITestResult;
 
@@ -11,15 +11,7 @@ import org.testng.ITestResult;
 public class RetryAnalyzer implements IRetryAnalyzer {
 
     private int retryCount = 0;
-    private static final int MAX_RETRY = loadMaxRetry();
-
-    private static int loadMaxRetry() {
-        try {
-            return Integer.parseInt(ConfigReader.get("retryCount"));
-        } catch (Exception e) {
-            return 2;
-        }
-    }
+    private static final int MAX_RETRY = Integer.parseInt(ConfigReader.getProperty("retryCount"));
 
     /**
      * Determines whether a failed test should be retried.

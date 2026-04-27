@@ -3,7 +3,7 @@ package org.automation.testUtils;
 import io.appium.java_client.android.AndroidDriver;
 import org.automation.config.DriverFactory;
 import org.automation.utils.AppiumUtils;
-import org.automation.utils.ConfigReader;
+import org.automation.config.ConfigReader;
 import org.automation.utils.ScrollHelper;
 import org.automation.utils.SwipeHelper;
 import org.automation.utils.WaitHelper;
@@ -56,13 +56,13 @@ public class AndroidBaseClass extends AppiumUtils {
     public void resetApp() {
         if (driver != null) {
             try {
-                String appPackage = ConfigReader.get("appPackage");
+                String appPackage = ConfigReader.getProperty("appPackage");
                 driver.terminateApp(appPackage);
                 driver.activateApp(appPackage);
             } catch (Exception e) {
                 System.out.println("[resetApp] Reset failed, attempting recovery: " + e.getMessage());
                 try {
-                    driver.activateApp(ConfigReader.get("appPackage"));
+                    driver.activateApp(ConfigReader.getProperty("appPackage"));
                 } catch (Exception ignored) {
                 }
             }

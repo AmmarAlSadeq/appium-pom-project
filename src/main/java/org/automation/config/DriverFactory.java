@@ -3,12 +3,10 @@ package org.automation.config;
 import java.time.Duration;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import org.automation.utils.AppiumUtils;
-import org.automation.utils.ConfigReader;
 
 /**
  * Singleton factory for managing AndroidDriver lifecycle with parallel support.
@@ -18,7 +16,7 @@ import org.automation.utils.ConfigReader;
  */
 public class DriverFactory {
 
-    private static final int DEVICE_COUNT = loadDeviceCount();
+    private static final int DEVICE_COUNT = Integer.parseInt(ConfigReader.getProperty("deviceCount"));
     private static DriverFactory instance;
     private static AppiumDriverLocalService service;
     private static final ConcurrentHashMap<Long, Integer> threadDeviceMap = new ConcurrentHashMap<>();
@@ -27,14 +25,6 @@ public class DriverFactory {
     private static final ThreadLocal<AndroidDriver> driverThreadLocal = new ThreadLocal<>();
 
     private DriverFactory() {
-    }
-
-    private static int loadDeviceCount() {
-        try {
-            return Integer.parseInt(ConfigReader.get("deviceCount"));
-        } catch (Exception e) {
-            return 1;
-        }
     }
 
     /**
@@ -57,8 +47,8 @@ public class DriverFactory {
     public void startService() {
         String ipAddress = System.getProperty("ipAddress") != null
                 ? System.getProperty("ipAddress")
-                : ConfigReader.get("ipAddress");
-        int port = Integer.parseInt(ConfigReader.get("port"));
+                : ConfigReader.getProperty("ipAddress");
+        int port = Integer.parseInt(ConfigReader.getProperty("port"));
         AppiumUtils appiumUtils = new AppiumUtils() {};
         service = appiumUtils.startAppiumServer(ipAddress, port);
 
@@ -92,12 +82,12 @@ public class DriverFactory {
      */
     private void buildAndroidDriver(int index) {
         String prefix = "device" + (index + 1) + ".";
-        String deviceName = ConfigReader.get(prefix + "deviceName");
-        String udid = ConfigReader.get(prefix + "udid");
-        int systemPort = Integer.parseInt(ConfigReader.get(prefix + "systemPort"));
-        String appPackage = ConfigReader.get("appPackage");
-        String appActivity = ConfigReader.get("appActivity");
-        String apkFileName = ConfigReader.get("apkFileName");
+        String deviceName = ConfigReader.getProperty(prefix + "deviceName");
+        String udid = ConfigReader.getProperty(prefix + "udid");
+        int systemPort = Integer.parseInt(ConfigReader.getProperty(prefix + "systemPort"));
+        String appPackage = ConfigReader.getProperty("appPackage");
+        String appActivity = ConfigReader.getProperty("appActivity");
+        String apkFileName = ConfigReader.getProperty("apkFileName");
         String apkPath = System.getProperty("user.dir") + "//src//main//java//org//automation//resources//" + apkFileName;
 
         UiAutomator2Options options = new UiAutomator2Options();
@@ -116,26 +106,9 @@ public class DriverFactory {
 
         AndroidDriver driver = new AndroidDriver(service.getUrl(), options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(
-                Integer.parseInt(ConfigReader.get("defaultWaitTimeout"))));
+                Integer.parseInt(ConfigReader.getProperty("defaultWaitTimeout"))));
         driverThreadLocal.set(driver);
         allDrivers.put(Thread.currentThread().getId(), driver);
-    }
-
-    /**
-     * Quits the AndroidDriver for the current thread with error handling.
-     * The thread keeps its device assignment for the next class.
-     */
-    public void quitDriver() {
-        AndroidDriver driver = driverThreadLocal.get();
-        if (driver != null) {
-            try {
-                driver.quit();
-            } catch (Exception e) {
-                System.out.println("[DriverFactory] Error quitting driver: " + e.getMessage());
-            }
-            driverThreadLocal.remove();
-            allDrivers.remove(Thread.currentThread().getId());
-        }
     }
 
     /**

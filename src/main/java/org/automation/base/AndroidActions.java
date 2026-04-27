@@ -8,7 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebElement;
 
 /**
- * Base class for all page objects.
+ * Base class for all android page objects.
  * Provides shared driver, wait, element state, and Android gesture methods.
  */
 public class AndroidActions {
