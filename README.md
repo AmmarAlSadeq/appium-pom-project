@@ -198,6 +198,7 @@ appium-pom-project/
 │   │   │   └── AndroidActions.java             # driver, waitHelper, element state, gestures
 │   │   │
 │   │   ├── config/                             # Driver configuration
+│   │   │   ├── ConfigReader.java               # config.properties reader
 │   │   │   └── DriverFactory.java              # Singleton factory, ThreadLocal drivers
 │   │   │
 │   │   ├── locators/                           # LOCATORS LAYER - selector strings only
@@ -234,7 +235,6 @@ appium-pom-project/
 │   │   │
 │   │   ├── utils/                              # Utility classes
 │   │   │   ├── AppiumUtils.java                # Server start/stop, ExtentReports
-│   │   │   ├── ConfigReader.java               # config.properties reader
 │   │   │   ├── WaitHelper.java                 # Explicit waits (WebDriverWait wrapper)
 │   │   │   ├── ScrollHelper.java               # UiScrollable + mobile:scroll actions
 │   │   │   └── SwipeHelper.java                # W3C PointerInput swipes

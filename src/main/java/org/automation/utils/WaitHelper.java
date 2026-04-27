@@ -1,7 +1,7 @@
 package org.automation.utils;
 
+import org.automation.config.ConfigReader;
 import java.time.Duration;
-
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
@@ -26,16 +26,8 @@ public class WaitHelper {
      */
     public WaitHelper(AndroidDriver driver) {
         this.driver = driver;
-        this.timeoutSeconds = loadTimeout();
+        this.timeoutSeconds = Integer.parseInt(ConfigReader.getProperty("defaultWaitTimeout"));
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
-    }
-
-    private static int loadTimeout() {
-        try {
-            return Integer.parseInt(ConfigReader.get("defaultWaitTimeout"));
-        } catch (Exception e) {
-            return 15;
-        }
     }
 
     /**
