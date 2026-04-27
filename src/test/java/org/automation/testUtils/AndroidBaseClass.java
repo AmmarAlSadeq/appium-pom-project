@@ -39,7 +39,7 @@ public class AndroidBaseClass extends AppiumUtils {
      * Creates AndroidDriver and initializes helpers for each test class.
      */
     @BeforeClass(alwaysRun = true)
-    public void configureAppium() {
+    public void initializeDriver() {
         DriverFactory factory = DriverFactory.getInstance();
         driver = factory.getDriver();
 

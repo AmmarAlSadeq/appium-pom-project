@@ -80,7 +80,7 @@ public class DriverFactory {
             int index = threadDeviceMap.computeIfAbsent(threadId,
                     id -> threadCounter.getAndIncrement() % DEVICE_COUNT);
             System.out.println("[Thread-" + threadId + "] Assigned to device" + (index + 1));
-            createDriver(index);
+            buildAndroidDriver(index);
         }
         return driverThreadLocal.get();
     }
@@ -90,7 +90,7 @@ public class DriverFactory {
      *
      * @param index The device index (0-based) from the device pool.
      */
-    private void createDriver(int index) {
+    private void buildAndroidDriver(int index) {
         String prefix = "device" + (index + 1) + ".";
         String deviceName = ConfigReader.get(prefix + "deviceName");
         String udid = ConfigReader.get(prefix + "udid");
